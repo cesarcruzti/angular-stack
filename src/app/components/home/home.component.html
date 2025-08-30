@@ -1,16 +1,79 @@
-<header class="header">
-    <div class="header-left">
+<mat-sidenav-container class="layout-container">
+  <!-- Sidebar -->
+  <mat-sidenav #sidenav mode="side" class="sidenav" opened>
+    <div class="sidenav-header">
+      <mat-icon>dashboard</mat-icon>
+      <span class="sidenav-title">Menu</span>
+    </div>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/dashboard" routerLinkActive="active">
+        <mat-icon matListItemIcon>home</mat-icon>
+        <div matListItemTitle>Dashboard</div>
+      </a>
+    
+      <a mat-list-item routerLink="/reports" routerLinkActive="active">
+        <mat-icon matListItemIcon>bar_chart</mat-icon>
+        <div matListItemTitle>Relatórios</div>
+      </a>
+    
+      <a mat-list-item routerLink="/settings" routerLinkActive="active">
+        <mat-icon matListItemIcon>settings</mat-icon>
+        <div matListItemTitle>Configurações</div>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <!-- Main content -->
+  <mat-sidenav-content>
+    <!-- Header -->
+    <mat-toolbar color="primary" class="header">
+      <button mat-icon-button (click)="sidenav.toggle()" class="menu-button">
+        <mat-icon>menu</mat-icon>
+      </button>
       <span class="app-title">Angular-App</span>
+      <span class="spacer"></span>
+      <div class="user-info">
+        <mat-icon>account_circle</mat-icon>
+        @if(userProfile){
+          <span class="user-name">{{ userProfile.firstName }} {{ userProfile.lastName }}</span>
+        }
+        <button mat-icon-button (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon>
+        </button>
+      </div>
+    </mat-toolbar>
+
+    <!-- Dashboard Content -->
+    <div class="content">
+      <h2>Bem-vindo(a), {{ userProfile?.firstName }}!</h2>
+      <div class="card-grid">
+        <mat-card class="dashboard-card">
+          <mat-card-header>
+            <mat-card-title>Visão Geral</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Resumo rápido das métricas principais.</p>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="dashboard-card">
+          <mat-card-header>
+            <mat-card-title>Atividades Recentes</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Últimas ações realizadas no sistema.</p>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="dashboard-card">
+          <mat-card-header>
+            <mat-card-title>Notificações</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Mensagens e alertas importantes.</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
     </div>
-    <div class="header-right">
-      <ng-container>
-        <div class="user-info">
-            <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="account_circle"></mat-icon>
-            @if(userProfile){
-              <span class="user-name">{{ userProfile.firstName }} {{ userProfile.lastName }}</span>
-            }            
-        </div>
-        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="exit_to_app" (click)="logout()"></mat-icon>
-      </ng-container>
-    </div>
-</header>
+  </mat-sidenav-content>
+</mat-sidenav-container>
