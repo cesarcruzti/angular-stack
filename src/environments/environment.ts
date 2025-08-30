@@ -3,12 +3,13 @@ export const environment = {
     keycloak: {
         config: {
         url: 'http://localhost:8180',
-        realm: 'open',
-        clientId: 'angular-stack'
+        realm: 'angular-stack',
+        clientId: 'web-app'
         },
         initOptions: {
         onLoad: 'login-required',
         checkLoginIframe: false
-        }
-    }
+        },
+        role: 'user-web-app'
+    },
 };
