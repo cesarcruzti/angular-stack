@@ -11,5 +11,5 @@ import { HomeComponent } from "./components/home/home.component";
   styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title = signal('angular-stack');
+  protected readonly title = signal('angular-app');
 }

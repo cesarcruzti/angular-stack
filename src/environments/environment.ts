@@ -3,7 +3,7 @@ export const environment = {
     keycloak: {
         config: {
         url: 'http://localhost:8180',
-        realm: 'angular-stack',
+        realm: 'angular-app',
         clientId: 'web-app'
         },
         initOptions: {

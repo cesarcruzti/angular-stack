@@ -2,14 +2,9 @@ import { Routes } from '@angular/router';
 import { canActivateAuthRole } from './guards/auth.guard';
 import { HomeComponent } from './components/home/home.component';
 import { environment } from '../environments/environment';
-import { UnauthorisedComponent } from './components/unauthorised/unauthorised.component';
 
 
-export const routes: Routes = [
-    {
-        path: 'unauthorised',
-        component: UnauthorisedComponent
-    },
+export const routes: Routes = [ 
     {
         path: '',
         pathMatch: 'full',  
