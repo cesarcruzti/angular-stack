@@ -1,1 +1,16 @@
-<button (click)="logout()">Logout</button>
+<header class="header">
+    <div class="header-left">
+      <span class="app-title">Angular-App</span>
+    </div>
+    <div class="header-right">
+      <ng-container>
+        <div class="user-info">
+            <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="account_circle"></mat-icon>
+            @if(userProfile){
+              <span class="user-name">{{ userProfile.firstName }} {{ userProfile.lastName }}</span>
+            }            
+        </div>
+        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="exit_to_app" (click)="logout()"></mat-icon>
+      </ng-container>
+    </div>
+</header>
