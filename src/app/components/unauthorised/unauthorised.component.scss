@@ -1,0 +1,108 @@
+.unauthorized-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f0f2f5; // Cor de fundo suave
+  overflow: hidden;
+  animation: background-fade 1s ease-in-out forwards;
+}
+
+.unauthorized-card {
+  width: 90%;
+  max-width: 450px;
+  text-align: center;
+  padding: 40px 20px;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  animation: card-appear 0.8s ease-out forwards;
+}
+
+.unauthorized-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.unauthorized-icon {
+  font-size: 100px;
+  width: 100px;
+  height: 100px;
+  color: #ff5722; // Cor vibrante para o ícone
+  margin-bottom: 20px;
+  animation: icon-bounce 1s infinite alternate;
+}
+
+.unauthorized-title {
+  font-size: 2.5em;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+  animation: text-slide-up 0.6s ease-out forwards;
+}
+
+.unauthorized-message {
+  font-size: 1.2em;
+  color: #666;
+  margin-bottom: 5px;
+  animation: text-slide-up 0.8s ease-out forwards;
+}
+
+.unauthorized-message-details {
+  font-size: 1em;
+  color: #999;
+  margin-bottom: 30px;
+  animation: text-slide-up 1s ease-out forwards;
+}
+
+button {
+  text-transform: uppercase;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 50px;
+  animation: button-pop 1.2s ease-out forwards;
+}
+
+/* Animações Divertidas */
+@keyframes background-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes card-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes icon-bounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-15px); }
+}
+
+@keyframes text-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes button-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

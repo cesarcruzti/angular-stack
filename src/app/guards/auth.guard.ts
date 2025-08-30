@@ -14,14 +14,17 @@ const isAccessAllowed = async (
     return false;
   }
 
-  const hasRequiredRole = (role: string): boolean =>
-    Object.values(grantedRoles.resourceRoles).some((roles) => roles.includes(role));
-
-  if (authenticated && hasRequiredRole(requiredRole)) {
+  if (authenticated && hasRequiredRole(requiredRole, grantedRoles.resourceRoles)) {
     return true;
   }
 
-  return false;
+  const router = inject(Router);
+  return router.parseUrl('/unauthorised');
+};
+
+function hasRequiredRole(requiredRole: string[], grantedRoles: Record<string, string[]>): boolean {
+  const allGranted: string[] = Object.values(grantedRoles).flat();
+  return requiredRole.every((role: string) => allGranted.includes(role));
 };
 
 export const canActivateAuthRole = createAuthGuard<CanActivateFn>(isAccessAllowed);
