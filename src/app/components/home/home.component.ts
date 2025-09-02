@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 
 
@@ -16,12 +17,13 @@ import { MatCardModule } from '@angular/material/card';
     MatIconModule,
     MatListModule,
     MatButtonModule,
-    MatCardModule],
+    MatCardModule,
+    RouterLink, RouterLinkActive],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
-  private readonly keycloak = inject(Keycloak);
+  readonly keycloak = inject(Keycloak);
   userProfile: any;
 
   async ngOnInit() {
@@ -34,6 +36,10 @@ export class HomeComponent {
 
   logout() {
     this.keycloak.logout();
+  }
+
+  login() {
+    this.keycloak.login();
   }
   
 }

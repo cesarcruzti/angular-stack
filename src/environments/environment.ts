@@ -7,7 +7,7 @@ export const environment = {
         clientId: 'web-app'
         },
         initOptions: {
-        onLoad: 'login-required',
+        onLoad: 'check-sso',
         checkLoginIframe: false
         },
         role: 'user-web-app'
