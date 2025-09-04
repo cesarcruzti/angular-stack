@@ -17,8 +17,9 @@ export class ApiService {
    * @param rangeSize O tamanho de cada faixa de papers.
    * @param pageSize O tamanho da página.
    */
-  fetchAllPaperRanges(rangeSize: number, pageSize: number = 2000): void {
+  fetchAllPaperRanges(rangeSize: number, pageSize: number = 10000): void {
     let currentPage = 0;
+    this.paperRangesSignal.set([]);
     
     const fetchPage = (pageNumber: number): Observable<any> => {
       let params = new HttpParams()

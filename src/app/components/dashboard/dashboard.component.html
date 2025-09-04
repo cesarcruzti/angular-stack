@@ -6,16 +6,10 @@
         <div class="input-fields">
           <mat-form-field appearance="outline">
             <mat-label>Range Size</mat-label>
-            <input matInput type="number" [(ngModel)]="rangeSize" placeholder="Ex: 100">
+            <input matInput type="number" [(ngModel)]="rangeSize" placeholder="Ex: 2000" [min]="2000" #rangeSizeModel="ngModel">
           </mat-form-field>
-  
-          <mat-form-field appearance="outline">
-            <mat-label>Page Size</mat-label>
-            <input matInput type="number" [(ngModel)]="pageSize" placeholder="Ex: 20">
-          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="fetchRanges()" [disabled]="rangeSizeModel.invalid || !rangeSize">Fetch Ranges</button>
         </div>
-  
-        <button mat-raised-button color="primary" (click)="fetchRanges()">Fetch Ranges</button>
       </mat-card-content>
     </mat-card>
   
@@ -29,12 +23,19 @@
   
           <mat-divider></mat-divider>
   
-          @for (range of paperRangesSignal(); track range.initialEntity) {
+          @for (range of paginatedRanges(); track range.initialEntity) {
             <mat-grid-list cols="2" rowHeight="50px">
               <mat-grid-tile>{{ range.initialEntity }}</mat-grid-tile>
               <mat-grid-tile>{{ range.finalEntity }}</mat-grid-tile>
             </mat-grid-list>
           }
+  
+          <mat-paginator
+            [length]="paperRangesSignal().length"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 20, 50]"
+            (page)="onPageChange($event)">
+          </mat-paginator>
         </mat-card-content>
       </mat-card>
     } @else {
