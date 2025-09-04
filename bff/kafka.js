@@ -1,6 +1,7 @@
 const { Kafka } = require('kafkajs');
 const { SchemaRegistry, readAVSC } = require('@kafkajs/confluent-schema-registry');
 const path = require('path');
+const avro = require('avsc');
 
 const kafka = new Kafka({
   clientId: 'bff-client',
@@ -12,17 +13,21 @@ const consumer = kafka.consumer({ groupId: 'bff-consumer-group' });
 
 const registry = new SchemaRegistry({ host: 'http://localhost:8081' });
 
-// Carrega os schemas
+// Carrega schemas
 const commandSchema = readAVSC(path.join(__dirname, 'schemas', 'PaperValuationCommand.avsc'));
-const responseSchema = readAVSC(path.join(__dirname, 'schemas', 'PaperValuationResponse.avsc'));
+const responseSchemaJSON = readAVSC(path.join(__dirname, 'schemas', 'PaperValuationResponse.avsc'));
+
+// Cria tipo Avro para validação
+const responseType = avro.Type.forSchema(responseSchemaJSON);
 
 async function connectKafka() {
   await producer.connect();
   await consumer.connect();
 }
 
+// Publicar comando
 async function sendMessage(topic, message) {
-  const { id } = await registry.register(commandSchema); // registra/pega schema ID
+  const { id } = await registry.register(commandSchema);
   const encodedMessage = await registry.encode(id, message);
 
   await producer.send({
@@ -31,13 +36,25 @@ async function sendMessage(topic, message) {
   });
 }
 
+// Consumir mensagens com validação Avro
 async function consumeMessages(topic, callback) {
   await consumer.subscribe({ topic, fromBeginning: false });
 
   await consumer.run({
     eachMessage: async ({ message }) => {
-      const decoded = await registry.decode(message.value);
-      callback(decoded);
+      try {
+        // Decodifica mensagem do Schema Registry
+        const decodedMessage = await registry.decode(message.value);
+
+        // Valida explicitamente usando avsc
+        if (responseType.isValid(decodedMessage)) {
+          callback(decodedMessage);
+        } else {
+          console.warn('Mensagem inválida recebida:', decodedMessage);
+        }
+      } catch (err) {
+        console.error('Erro ao decodificar ou validar a mensagem:', err);
+      }
     }
   });
 }
