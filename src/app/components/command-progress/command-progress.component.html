@@ -1,0 +1,18 @@
+<div class="progress-track">
+    <mat-chip-listbox>
+      <mat-chip *ngFor="let cmd of commands(); trackBy: trackById"
+                [color]="getStatusColor(cmd.status)"
+                selected
+                [style.animationDelay.ms]="cmd.delay"
+                [ngClass]="cmd.status">
+        {{ cmd.status }}
+      </mat-chip>
+    </mat-chip-listbox>
+  </div>
+  
+  <div class="progress-bar-container">
+    <mat-progress-bar mode="determinate" [value]="processedPercent" color="accent"></mat-progress-bar>
+    <mat-progress-bar mode="determinate" [value]="runningPercent" color="primary"></mat-progress-bar>
+    <mat-progress-bar mode="determinate" [value]="failedPercent" color="warn"></mat-progress-bar>
+  </div>
+  

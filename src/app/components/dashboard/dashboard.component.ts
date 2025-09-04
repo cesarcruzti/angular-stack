@@ -10,6 +10,7 @@ import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/p
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { PaperRange } from '../../model/paper-range.model';
+import { CommandProgressComponent } from '../command-progress/command-progress.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,7 +24,8 @@ import { PaperRange } from '../../model/paper-range.model';
     MatButtonModule,
     MatGridListModule,
     MatDividerModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    CommandProgressComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
