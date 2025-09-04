@@ -1,0 +1,38 @@
+{
+  "type": "record",
+  "namespace": "com.example.events",
+  "name": "PaperValuationResponse",
+  "doc": "Represents the response of a paper valuation command.",
+  "fields": [
+    {
+      "name": "commandId",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      },
+      "doc": "Unique identifier for the command being responded to."
+    },
+    {
+      "name": "status",
+      "type": {
+        "type": "enum",
+        "name": "PaperValuationStatus",
+        "symbols": ["RUNNING", "PROCESSED", "FAILED"]
+      },
+      "doc": "Current status of the paper valuation."
+    },
+    {
+      "name": "errorCode",
+      "type": [
+        "null",
+        {
+          "type": "enum",
+          "name": "PaperValuationErrorCode",
+          "symbols": ["NO_PAPERS_FOUND", "DAILY_VARIATION_NOT_GENERATED"]
+        }
+      ],
+      "doc": "Specifies the error code if the status is FAILED. Null otherwise.",
+      "default": null
+    }
+  ]
+}

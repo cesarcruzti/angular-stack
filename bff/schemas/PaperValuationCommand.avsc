@@ -1,0 +1,34 @@
+{
+  "type": "record",
+  "namespace": "com.example.events",
+  "name": "PaperValuationCommand",
+  "doc": "Represents a command to trigger the valuation of a range of papers.",
+  "fields": [
+    {
+      "name": "commandId",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      },
+      "doc": "Unique identifier for the command."
+    },
+    {
+      "name": "initialEntity",
+      "type": "long",
+      "doc": "The starting ID of the paper range."
+    },
+    {
+      "name": "finalEntity",
+      "type": "long",
+      "doc": "The ending ID of the paper range."
+    },
+    {
+      "name": "referenceDate",
+      "type": {
+        "type": "int",
+        "logicalType": "date"
+      },
+      "doc": "The reference date for the valuation (Avro logicalType 'date' = days since epoch)."
+    }
+  ]
+}
