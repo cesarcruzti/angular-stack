@@ -1,1 +1,47 @@
-<p>dashboard.component works!</p>
+<div class="api-consumer-container">
+    <h2>Paper Ranges</h2>
+  
+    <mat-card class="input-card">
+      <mat-card-content>
+        <div class="input-fields">
+          <mat-form-field appearance="outline">
+            <mat-label>Range Size</mat-label>
+            <input matInput type="number" [(ngModel)]="rangeSize" placeholder="Ex: 100">
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline">
+            <mat-label>Page Size</mat-label>
+            <input matInput type="number" [(ngModel)]="pageSize" placeholder="Ex: 20">
+          </mat-form-field>
+        </div>
+  
+        <button mat-raised-button color="primary" (click)="fetchRanges()">Fetch Ranges</button>
+      </mat-card-content>
+    </mat-card>
+  
+    @if (paperRangesSignal().length > 0) {
+      <mat-card class="data-card">
+        <mat-card-content>
+          <mat-grid-list cols="2" rowHeight="50px" class="grid-header">
+            <mat-grid-tile><strong>Initial Entity</strong></mat-grid-tile>
+            <mat-grid-tile><strong>Final Entity</strong></mat-grid-tile>
+          </mat-grid-list>
+  
+          <mat-divider></mat-divider>
+  
+          @for (range of paperRangesSignal(); track range.initialEntity) {
+            <mat-grid-list cols="2" rowHeight="50px">
+              <mat-grid-tile>{{ range.initialEntity }}</mat-grid-tile>
+              <mat-grid-tile>{{ range.finalEntity }}</mat-grid-tile>
+            </mat-grid-list>
+          }
+        </mat-card-content>
+      </mat-card>
+    } @else {
+      <mat-card class="no-data-card">
+        <mat-card-content>
+          <p>Nenhum dado disponível. Por favor, insira os parâmetros e clique em "Fetch Ranges".</p>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>  
