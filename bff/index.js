@@ -40,7 +40,7 @@ app.get('/stream/response', (req, res) => {
   res.flushHeaders();
 
   const sendEvent = (data) => {
-    res.write(`data: ${JSON.stringify(data)}\n\n`);
+    res.write(`${JSON.stringify(data)}\n\n`);
   };
 
   consumeMessages(RESPONSE_TOPIC, sendEvent).catch(console.error);
