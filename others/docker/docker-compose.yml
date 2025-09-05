@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  rethinkdb:
+    image: rethinkdb:latest
+    ports:
+      - "8280:8080" # Admin UI
+      - "28015:28015" # Client driver port
+      - "29015:29015" # Intra-cluster port
+    volumes:
+      - rethinkdb_data:/data # Persistent data volume
+    restart: always
+
+volumes:
+  rethinkdb_data:
