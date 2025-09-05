@@ -58,7 +58,7 @@ app.get('/stream/response', async (req, res) => {
       }
 
       if (change.new_val) {
-        res.write(`data: ${JSON.stringify(change.new_val)}\n\n`);
+        res.write(`data: ${JSON.stringify(change.new_val.data)}\n\n`);
       }
     });
 

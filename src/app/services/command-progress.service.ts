@@ -5,24 +5,25 @@ import { CommandStatus } from '../model/command-status.model';
 export class CommandProgressService {
   private url = '/bff/stream/response';
 
-  // Signal para armazenar o status atual
-  public progress = signal<CommandStatus | null>(null);
+  public readonly progress = signal<CommandStatus[]>([]);
 
   private eventSource?: EventSource;
 
   startListening() {
-    if (this.eventSource) return; // já está ouvindo
+    if (this.eventSource) return;
 
     this.eventSource = new EventSource(this.url);
 
+    console.log('startListening');
+
     this.eventSource.onmessage = (event) => {
       const data: CommandStatus = JSON.parse(event.data);
-      this.progress.set(data); // atualiza o signal
+      this.progress.update(prev => [...prev, data]);
     };
 
     this.eventSource.onerror = (err) => {
       console.error('SSE error', err);
-      this.stopListening(); // opcional, para fechar no erro
+      this.stopListening();
     };
   }
 
