@@ -1,0 +1,69 @@
+<div class="flow-container">
+  <ng-container>
+    <div class="circle-container">
+      <div class="circle">
+        <svg viewBox="0 0 36 36" class="circular-chart">
+          <path
+            class="circle-bg"
+            d="M18 2.0845
+               a 15.9155 15.9155 0 0 1 0 31.831
+               a 15.9155 15.9155 0 0 1 0 -31.831"
+          />
+          <path
+            class="circle-fill"
+            [attr.stroke-dasharray]="getFillPercent(pending) + ', 100'"
+            d="M18 2.0845
+               a 15.9155 15.9155 0 0 1 0 31.831
+               a 15.9155 15.9155 0 0 1 0 -31.831"
+          />
+        </svg>
+        <div class="circle-value">{{ pending }}</div>
+      </div>
+      <div class="circle-label">Pendente</div>
+    </div>
+    <span class="arrow-head">➝</span>
+    <div class="circle-container">
+      <div class="circle">
+        <svg viewBox="0 0 36 36" class="circular-chart">
+          <path
+            class="circle-bg"
+            d="M18 2.0845
+               a 15.9155 15.9155 0 0 1 0 31.831
+               a 15.9155 15.9155 0 0 1 0 -31.831"
+          />
+          <path
+            class="circle-fill"
+            [attr.stroke-dasharray]="getFillPercent(running) + ', 100'"
+            d="M18 2.0845
+               a 15.9155 15.9155 0 0 1 0 31.831
+               a 15.9155 15.9155 0 0 1 0 -31.831"
+          />
+        </svg>
+        <div class="circle-value">{{ running }}</div>
+      </div>
+      <div class="circle-label">Processando</div>
+    </div>
+    <span class="arrow-head">➝</span>
+    <div class="circle-container">
+      <div class="circle">
+        <svg viewBox="0 0 36 36" class="circular-chart">
+          <path
+            class="circle-bg"
+            d="M18 2.0845
+               a 15.9155 15.9155 0 0 1 0 31.831
+               a 15.9155 15.9155 0 0 1 0 -31.831"
+          />
+          <path
+            class="circle-fill"
+            [attr.stroke-dasharray]="getFillPercent(processed) + ', 100'"
+            d="M18 2.0845
+               a 15.9155 15.9155 0 0 1 0 31.831
+               a 15.9155 15.9155 0 0 1 0 -31.831"
+          />
+        </svg>
+        <div class="circle-value">{{ processed }}</div>
+      </div>
+      <div class="circle-label">Concluído</div>
+    </div>
+  </ng-container>
+</div>
