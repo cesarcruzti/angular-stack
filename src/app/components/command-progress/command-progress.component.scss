@@ -56,13 +56,30 @@
 }
 
 .arrow {
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  opacity: 0.3;
+  opacity: 0.6;
   transform: translateX(0);
+  color: #999;
+  display: inline-flex;
+  align-items: center;
 }
 
 .arrow.active {
-  opacity: 1;
-  transform: translateX(1px);
   color: #3f51b5;
+  opacity: 1;
+  animation: flowArrow 1s ease-in-out infinite;
+}
+
+@keyframes flowArrow {
+  0% {
+    transform: translateX(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateX(20px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 0.6;
+  }
 }
