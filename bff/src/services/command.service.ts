@@ -10,8 +10,14 @@ async function send(commands:Command[]) {
   updateProgress({pending: commands.length, running: 0, processed: 0, failed: 0});
   let referenceDate = daysSinceEpoch();
   commands.forEach(async c=>{
-    const command:any = { commandId: uuidv4(), initialEntity:c.initialEntity, finalEntity:c.finalEntity, referenceDate };
-    await sendMessage(COMMAND_TOPIC, command);
+    let key = uuidv4();
+    const command:any = { 
+        commandId: key,
+        initialEntity:  c.initialEntity, 
+        finalEntity: c.finalEntity, 
+        referenceDate
+    };
+    await sendMessage(COMMAND_TOPIC, key, command);
   })
 }
 
