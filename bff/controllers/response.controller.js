@@ -31,7 +31,13 @@ async function streamProgress(req, res) {
   let cursor;
   try {
     cursor = await responseRepo.watchProgress((data) => {
-      res.write(`data: ${JSON.stringify(data)}\n\n`);
+      pending = data.pending-data.running;
+      running = data.running-data.processed-data.failed;
+      if(running < 0) running=0;
+      processed = data.processed;
+      failed = data.failed;
+      progress = {pending, running, processed, failed}
+      res.write(`data: ${JSON.stringify(progress)}\n\n`);
     });
   } catch (err) {
     res.write(`data: ${JSON.stringify({ error: 'Failed to init stream' })}\n\n`);

@@ -27,7 +27,7 @@ async function watchProgress(callback) {
       console.error('Error in changefeed', err);
       return;
     }
-    if (change.new_val) callback(change.new_val.data);
+    if (change.new_val) callback(change.new_val);
   });
   return cursor;
 }
