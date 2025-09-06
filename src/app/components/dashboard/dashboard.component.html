@@ -1,54 +1,59 @@
 <div class="api-consumer-container">
-    <h2>Paper Ranges</h2>
-  
-    <mat-card class="input-card">
-      <mat-card-content>
-        <div class="input-fields">
-          <mat-form-field appearance="outline">
-            <mat-label>Range Size</mat-label>
-            <input matInput type="number" [(ngModel)]="rangeSize" placeholder="Ex: 2000" [min]="2000" #rangeSizeModel="ngModel">
-          </mat-form-field>
-          <button mat-raised-button color="primary" (click)="fetchRanges()" [disabled]="rangeSizeModel.invalid || !rangeSize">Fetch Ranges</button>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  
-    @if (paperRangesSignal().length > 0) {
-      <mat-card class="data-card">
-        <mat-card-content>
-          <mat-grid-list cols="2" rowHeight="50px" class="grid-header">
-            <mat-grid-tile><strong>Initial Entity</strong></mat-grid-tile>
-            <mat-grid-tile><strong>Final Entity</strong></mat-grid-tile>
-          </mat-grid-list>
-  
-          <mat-divider></mat-divider>
-  
-          @for (range of paginatedRanges(); track range.initialEntity) {
-            <mat-grid-list cols="2" rowHeight="50px">
-              <mat-grid-tile>{{ range.initialEntity }}</mat-grid-tile>
-              <mat-grid-tile>{{ range.finalEntity }}</mat-grid-tile>
-            </mat-grid-list>
-          }
-  
-          <mat-paginator
-            [length]="paperRangesSignal().length"
-            [pageSize]="pageSize"
-            [pageSizeOptions]="[5, 10, 20, 50]"
-            (page)="onPageChange($event)">
-          </mat-paginator>
-        </mat-card-content>
-      </mat-card>
-    } @else {
-      <mat-card class="no-data-card">
-        <mat-card-content>
-          <p>Nenhum dado disponível. Por favor, insira os parâmetros e clique em "Fetch Ranges".</p>
-        </mat-card-content>
-      </mat-card>
-    }
+  <h2>Paper Ranges</h2>
 
-    <mat-card class="no-data-card">
-      <mat-card-content>
-        <app-command-progress></app-command-progress>
-      </mat-card-content>
-    </mat-card>
-  </div>  
+  <mat-card class="input-card">
+    <mat-card-content>
+      <div class="input-fields">
+        <mat-form-field appearance="outline">
+          <mat-label>Range Size</mat-label>
+          <input matInput type="number" [(ngModel)]="rangeSize" placeholder="Ex: 2000" [min]="2000"
+            #rangeSizeModel="ngModel">
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="fetchRanges()"
+          [disabled]="rangeSizeModel.invalid || !rangeSize">Fetch Ranges</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  @if (paperRangesSignal().length > 0) {
+  <mat-card class="data-card">
+    <mat-card-content>
+      <mat-grid-list cols="2" rowHeight="50px" class="grid-header">
+        <mat-grid-tile><strong>Initial Entity</strong></mat-grid-tile>
+        <mat-grid-tile><strong>Final Entity</strong></mat-grid-tile>
+      </mat-grid-list>
+
+      <mat-divider></mat-divider>
+
+      @for (range of paginatedRanges(); track range.initialEntity) {
+      <mat-grid-list cols="2" rowHeight="50px">
+        <mat-grid-tile>{{ range.initialEntity }}</mat-grid-tile>
+        <mat-grid-tile>{{ range.finalEntity }}</mat-grid-tile>
+      </mat-grid-list>
+      }
+
+      <mat-paginator [length]="paperRangesSignal().length" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20, 50]"
+        (page)="onPageChange($event)">
+      </mat-paginator>
+    </mat-card-content>
+    <mat-divider></mat-divider>
+    <mat-card-footer class="card-footer">
+        <button mat-raised-button color="primary" (click)="processingCommand()"
+          [disabled]="paginatedRanges().length == 0">Processing Commands</button>
+    </mat-card-footer>
+
+  </mat-card>
+
+  <mat-card class="data-card">
+    <mat-card-content>
+      <app-command-progress [max]="paginatedRanges().length"></app-command-progress>
+    </mat-card-content>
+  </mat-card>
+  } @else {
+  <mat-card class="no-data-card">
+    <mat-card-content>
+      <p>Nenhum dado disponível. Por favor, insira os parâmetros e clique em "Fetch Ranges".</p>
+    </mat-card-content>
+  </mat-card>
+  }
+</div>

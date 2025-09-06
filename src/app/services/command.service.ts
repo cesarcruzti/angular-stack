@@ -1,18 +1,21 @@
 import { Injectable, signal } from '@angular/core';
 import { CommandProgress } from '../model/command-progress.model';
+import { PaperRange } from '../model/paper-range.model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
-export class CommandProgressService {
-  private url = '/bff/stream/progress';
+export class CommandService {
 
   public readonly progress = signal<CommandProgress>({pending: 0, running: 0, processed: 0, failed: 0});
 
   private eventSource?: EventSource;
 
+  constructor(private http: HttpClient) {}
+
   startListening() {
     if (this.eventSource) return;
 
-    this.eventSource = new EventSource(this.url);
+    this.eventSource = new EventSource("/bff/stream/progress");
 
     this.eventSource.onmessage = (event) => {
       const data = JSON.parse(event.data);
@@ -28,5 +31,9 @@ export class CommandProgressService {
   stopListening() {
     this.eventSource?.close();
     this.eventSource = undefined;
+  }
+
+  sendCommand(ranges: PaperRange[]){
+    return this.http.post('/bff/send/command', ranges);
   }
 }

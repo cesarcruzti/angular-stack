@@ -1,7 +1,7 @@
-const { Kafka } = require('kafkajs');
-const { SchemaRegistry, readAVSC } = require('@kafkajs/confluent-schema-registry');
-const avro = require('avsc');
-const config = require('./index');
+import { Kafka } from 'kafkajs';
+import { SchemaRegistry, readAVSC } from '@kafkajs/confluent-schema-registry';
+import avro from 'avsc';
+import config from './index';
 
 // Inicializa Kafka
 const kafka = new Kafka({
@@ -28,7 +28,7 @@ async function connectKafka() {
 }
 
 // Publicar comando no Kafka com Avro
-async function sendMessage(topic, message) {
+async function sendMessage(topic:string, message:string) {
   const { id } = await registry.register(commandSchema);
   const encodedMessage = await registry.encode(id, message);
 
@@ -38,12 +38,11 @@ async function sendMessage(topic, message) {
   });
 }
 
-// Consumir mensagens com validação Avro
-async function consumeMessages(topic, callback) {
+async function consumeMessages(topic:string, callback:any) {
   await consumer.subscribe({ topic, fromBeginning: false });
 
   await consumer.run({
-    eachMessage: async ({ message }) => {
+    eachMessage: async ({ message }:any) => {
       try {
         const decodedMessage = await registry.decode(message.value);
 
@@ -59,4 +58,4 @@ async function consumeMessages(topic, callback) {
   });
 }
 
-module.exports = { connectKafka, sendMessage, consumeMessages };
+export { connectKafka, sendMessage, consumeMessages };

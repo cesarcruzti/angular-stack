@@ -1,6 +1,8 @@
+import { Request, Response } from "express";
+
 const commandService = require('../services/command.service');
 
-async function sendCommand(req, res) {
+async function sendCommand(req:Request, res:Response) {
   try {
     const commandId = await commandService.send(req.body);
     res.status(200).json({ status: 'Command sent successfully', commandId });
@@ -9,4 +11,4 @@ async function sendCommand(req, res) {
   }
 }
 
-module.exports = { sendCommand };
+export { sendCommand };

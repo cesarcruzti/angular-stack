@@ -1,14 +1,15 @@
-const responseRepo = require('../repositories/response.repository');
+import { Request, Response } from 'express';
+import { watchChanges, watchProgress } from '../repositories/response.repository';
 
-async function streamResponses(req, res) {
+async function streamResponses(req:Request, res:Response) {
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
   res.flushHeaders();
 
-  let cursor;
+  let cursor:any;
   try {
-    cursor = await responseRepo.watchChanges((data) => {
+    cursor = await watchChanges((data:any) => {
       res.write(`data: ${JSON.stringify(data)}\n\n`);
     });
   } catch (err) {
@@ -22,21 +23,21 @@ async function streamResponses(req, res) {
   });
 }
 
-async function streamProgress(req, res) {
+async function streamProgress(req:Request, res:Response) {
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
   res.flushHeaders();
 
-  let cursor;
+  let cursor:any;
   try {
-    cursor = await responseRepo.watchProgress((data) => {
-      pending = data.pending-data.running;
-      running = data.running-data.processed-data.failed;
+    cursor = await watchProgress((data:any) => {
+      let pending = data.pending-data.running;
+      let running = data.running-data.processed-data.failed;
       if(running < 0) running=0;
-      processed = data.processed;
-      failed = data.failed;
-      progress = {pending, running, processed, failed}
+      let processed = data.processed;
+      let failed = data.failed;
+      let progress = {pending, running, processed, failed}
       res.write(`data: ${JSON.stringify(progress)}\n\n`);
     });
   } catch (err) {
@@ -50,4 +51,4 @@ async function streamProgress(req, res) {
   });
 }
 
-module.exports = { streamResponses, streamProgress };
+export { streamResponses, streamProgress };

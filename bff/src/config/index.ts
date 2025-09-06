@@ -20,8 +20,8 @@ const config = {
   db: {
     host: process.env.DB_HOST || 'localhost',
     port: process.env.DB_PORT || 28015,
-    name: process.env.DB_NAME || 'test',
+    name: process.env.DB_NAME || 'bff',
   }
 };
 
-module.exports = config;
+export default config;

@@ -1,6 +1,6 @@
 const rethinkdbdash = require('rethinkdbdash');
-const config = require('./index');
-const {info, error} = require('../utils/logger')
+import config from './index';
+import {info, error} from '../utils/logger';
 
 const database = rethinkdbdash({
     host: config.db.host,
@@ -62,4 +62,4 @@ async function defaultProgress() {
 
 setupDatabase();
 
-module.exports = database;
+export default database;

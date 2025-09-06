@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { PaperRange } from '../../model/paper-range.model';
 import { CommandProgressComponent } from '../command-progress/command-progress.component';
+import { CommandService } from '../../services/command.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,6 +33,7 @@ import { CommandProgressComponent } from '../command-progress/command-progress.c
 })
 export class DashboardComponent {
   private apiService = inject(ApiService);
+  private commandService = inject(CommandService);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   
   public rangeSize: number = 2000;
@@ -51,6 +53,12 @@ export class DashboardComponent {
       this.paginator.firstPage();
     }
     this.apiService.fetchAllPaperRanges(this.rangeSize);
+  }
+
+  processingCommand(): void {
+    this.commandService.sendCommand(this.paperRangesSignal()).subscribe(response=>{
+      console.log(response);
+    })
   }
 
   onPageChange(event: PageEvent): void {

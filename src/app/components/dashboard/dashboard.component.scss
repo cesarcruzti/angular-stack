@@ -1,46 +1,54 @@
 .api-consumer-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    padding: 20px;
-  }
-  
-  h2 {
-    color: #3f51b5;
-  }
-  
-  .input-card {
-    width: 100%;
-    max-width: 600px;
-  }
-  
-  .input-fields {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .data-card {
-    width: 100%;
-    max-width: 600px;
-    margin-top: 20px;
-  }
-  
-  .grid-header {
-    font-weight: bold;
-    color: #3f51b5;
-  }
-  
-  mat-grid-tile {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .no-data-card {
-    width: 100%;
-    max-width: 600px;
-    text-align: center;
-    color: #9e9e9e;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+h2 {
+  color: #3f51b5;
+}
+
+.input-card {
+  width: 100%;
+  max-width: 600px;
+}
+
+.input-fields {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.data-card {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 20px;
+}
+
+.grid-header {
+  font-weight: bold;
+  color: #3f51b5;
+}
+
+mat-grid-tile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.no-data-card {
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+  color: #9e9e9e;
+}

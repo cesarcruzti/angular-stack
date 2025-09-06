@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, OnDestroy, Input, effect, signal, Signal } from '@angular/core';
-import { CommandProgressService } from '../../services/command-progress.service';
+import { CommandService } from '../../services/command.service';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { CommonModule } from '@angular/common';
@@ -16,7 +16,7 @@ import { distinctUntilChanged, switchMap, of, timer } from 'rxjs';
 })
 export class CommandProgressComponent implements OnInit, OnDestroy {
 
-  private service = inject(CommandProgressService);
+  private service = inject(CommandService);
 
   @Input() max = 5000;
 
