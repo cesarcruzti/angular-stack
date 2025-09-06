@@ -2,10 +2,10 @@
     "name": "bff-kafka-avro",
     "version": "1.0.0",
     "description": "BFF Node.js para publicar comandos e consumir respostas via Kafka com Avro",
-    "main": "index.js",
+    "main": "server.js",
     "scripts": {
-        "start": "node index.js",
-        "dev": "nodemon index.js"
+        "start": "node server.js",
+        "dev": "nodemon server.js"
     },
     "dependencies": {
         "@kafkajs/confluent-schema-registry": "^3.9.0",
