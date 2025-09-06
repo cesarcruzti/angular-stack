@@ -21,8 +21,8 @@
       </div>
       <div class="circle-label">Pendente</div>
     </div>
-    <span class="arrow">➝</span>
-    <div class="circle-container">
+    <span [class.active]="progress.running > 0" class="arrow">➝</span>
+    <div  class="circle-container">
       <div class="circle">
         <svg viewBox="0 0 36 36" class="circular-chart">
           <path
@@ -43,7 +43,7 @@
       </div>
       <div class="circle-label">Processando</div>
     </div>
-    <span class="arrow">➝</span>
+    <span [class.active]="progress.running > 0" class="arrow">➝</span>
     <div class="circle-container">
       <div class="circle">
         <svg viewBox="0 0 36 36" class="circular-chart">
@@ -65,7 +65,7 @@
       </div>
       <div class="circle-label">Sucesso</div>
     </div>
-    <span class="arrow">➝</span>
+    <span [class.active]="progress.running > 0" class="arrow">➝</span>
     <div class="circle-container">
       <div class="circle">
         <svg viewBox="0 0 36 36" class="circular-chart">
