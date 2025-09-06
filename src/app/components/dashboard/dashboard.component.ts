@@ -36,7 +36,7 @@ export class DashboardComponent {
   private commandService = inject(CommandService);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   
-  public rangeSize: number = 2000;
+  public rangeSize: number = 500;
   public pageSize: number = 5;
   public currentPage = signal(0);
 
