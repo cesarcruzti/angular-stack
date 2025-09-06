@@ -1,11 +1,10 @@
-const tableName = 'paper_valuation_response';
-const indexName = 'commandId';
-const databasename = 'bff';
+const rethinkdbdash = require('rethinkdbdash');
+const config = require('./index');
 
-const database = require('rethinkdbdash')({
-    host: 'localhost',
-    port: 28015,
-    db: databasename
+const database = rethinkdbdash({
+  host: config.db.host,
+  port: config.db.port,
+  db: config.db.name,
 });
 
 async function setupDatabase() {
