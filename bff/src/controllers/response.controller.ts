@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { watchChanges, watchProgress } from '../repositories/response.repository';
+import { Progress } from '../model/progress.model';
 
 async function streamResponses(req:Request, res:Response) {
   res.setHeader('Content-Type', 'text/event-stream');
@@ -37,7 +38,7 @@ async function streamProgress(req:Request, res:Response) {
       if(running < 0) running=0;
       let processed = data.processed;
       let failed = data.failed;
-      let progress = {pending, running, processed, failed}
+      let progress:Progress = {pending, running, processed, failed}
       res.write(`data: ${JSON.stringify(progress)}\n\n`);
     });
   } catch (err) {

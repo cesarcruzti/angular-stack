@@ -1,4 +1,5 @@
 import database from '../config/database';
+import { Progress } from '../model/progress.model';
 
 async function insert(data:any) {
   return database.table('paper_valuation_response').insert({ data });
@@ -32,7 +33,7 @@ async function watchProgress(callback:any) {
   return cursor;
 }
 
-async function updateProgress(field:string) {
+async function updateFieldProgress(field:string) {
   const column = String(field).toLowerCase();
   await database.table('paper_valuation_progress')
     .get('main')
@@ -41,4 +42,10 @@ async function updateProgress(field:string) {
     }));
 }
 
-export { insert, insertProgress, updateProgress, watchChanges, watchProgress };
+async function updateProgress(progress:Progress) {
+  await database.table('paper_valuation_progress')
+    .get('main')
+    .update(progress);
+}
+
+export { insert, insertProgress, updateFieldProgress, updateProgress, watchChanges, watchProgress };

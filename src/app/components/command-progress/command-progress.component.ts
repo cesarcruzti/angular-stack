@@ -18,7 +18,7 @@ export class CommandProgressComponent implements OnInit, OnDestroy {
 
   private service = inject(CommandService);
 
-  @Input() max = 5000;
+  @Input() max = 0;
 
   progress: CommandProgress = { pending: 0, running: 0, processed: 0, failed: 0 };
 
@@ -26,7 +26,6 @@ export class CommandProgressComponent implements OnInit, OnDestroy {
 
   constructor() {
     const progress$ = toObservable(this.service.progress);
-
     const debouncedActive$ = progress$.pipe(
       switchMap(p => {
         if (p.running > 0) {
