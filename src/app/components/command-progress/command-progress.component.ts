@@ -3,7 +3,7 @@ import { CommandProgressService } from '../../services/command-progress.service'
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { CommonModule } from '@angular/common';
-import { CommandStatus } from '../../model/command-status.model';
+import { CommandProgress } from '../../model/command-progress.model';
 
 @Component({
   selector: 'app-command-progress',
@@ -17,9 +17,7 @@ export class CommandProgressComponent implements OnInit, OnDestroy {
   private service = inject(CommandProgressService);
 
   @Input() max = 5000;
-  pending = this.max;
-  running = 0;
-  processed = 0;
+  progress: CommandProgress = {pending: 0, running: 0, processed: 0, failed: 0};
 
   getFillPercent(value: number): number {
     return Math.min(100, (value / this.max) * 100);
@@ -27,10 +25,7 @@ export class CommandProgressComponent implements OnInit, OnDestroy {
 
   constructor() {
     effect(() => {
-      const { running, processed } = this.service.progress() || {};
-      this.processed = processed
-      this.running = running-processed
-      this.pending = this.max-processed
+      this.progress = this.service.progress()
     });
   }
 
@@ -41,7 +36,4 @@ export class CommandProgressComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.service.stopListening();
   }
-
-
-
 }

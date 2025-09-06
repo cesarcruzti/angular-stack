@@ -11,13 +11,13 @@
           />
           <path
             class="circle-fill"
-            [attr.stroke-dasharray]="getFillPercent(pending) + ', 100'"
+            [attr.stroke-dasharray]="getFillPercent(progress.pending) + ', 100'"
             d="M18 2.0845
                a 15.9155 15.9155 0 0 1 0 31.831
                a 15.9155 15.9155 0 0 1 0 -31.831"
           />
         </svg>
-        <div class="circle-value">{{ pending }}</div>
+        <div class="circle-value">{{ progress.pending }}</div>
       </div>
       <div class="circle-label">Pendente</div>
     </div>
@@ -33,13 +33,13 @@
           />
           <path
             class="circle-fill"
-            [attr.stroke-dasharray]="getFillPercent(running) + ', 100'"
+            [attr.stroke-dasharray]="getFillPercent(progress.running) + ', 100'"
             d="M18 2.0845
                a 15.9155 15.9155 0 0 1 0 31.831
                a 15.9155 15.9155 0 0 1 0 -31.831"
           />
         </svg>
-        <div class="circle-value">{{ running }}</div>
+        <div class="circle-value">{{ progress.running }}</div>
       </div>
       <div class="circle-label">Processando</div>
     </div>
@@ -55,13 +55,13 @@
           />
           <path
             class="circle-fill"
-            [attr.stroke-dasharray]="getFillPercent(processed) + ', 100'"
+            [attr.stroke-dasharray]="getFillPercent(progress.processed) + ', 100'"
             d="M18 2.0845
                a 15.9155 15.9155 0 0 1 0 31.831
                a 15.9155 15.9155 0 0 1 0 -31.831"
           />
         </svg>
-        <div class="circle-value">{{ processed }}</div>
+        <div class="circle-value">{{ progress.processed }}</div>
       </div>
       <div class="circle-label">Concluído</div>
     </div>

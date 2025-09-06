@@ -1,12 +1,11 @@
 import { Injectable, signal } from '@angular/core';
-import { CommandStatus } from '../model/command-status.model';
 import { CommandProgress } from '../model/command-progress.model';
 
 @Injectable({ providedIn: 'root' })
 export class CommandProgressService {
-  private url = '/bff/stream/response';
+  private url = '/bff/stream/progress';
 
-  public readonly progress = signal<CommandProgress>({running: 0, processed: 0});
+  public readonly progress = signal<CommandProgress>({pending: 0, running: 0, processed: 0, failed: 0});
 
   private eventSource?: EventSource;
 
@@ -16,19 +15,8 @@ export class CommandProgressService {
     this.eventSource = new EventSource(this.url);
 
     this.eventSource.onmessage = (event) => {
-      const dataString = JSON.parse(event.data);
-      const data: CommandStatus = JSON.parse(dataString);
-      
-      var running = this.progress().running;
-      var processed = this.progress().processed;
-
-      if(data.status === 'RUNNING'){
-        running++
-      } else if(data.status === 'PROCESSED'){
-        processed++
-      }
-
-      this.progress.set( {running, processed});
+      const data = JSON.parse(event.data);
+      this.progress.set(data);
     };
 
     this.eventSource.onerror = (err) => {
