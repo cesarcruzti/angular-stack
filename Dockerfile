@@ -1,0 +1,28 @@
+# Estágio 1: Build da Aplicação Angular
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copia os arquivos de dependência e instala
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Copia o restante do código-fonte da aplicação
+COPY . .
+
+# Executa o build de produção
+RUN npm run build
+
+# Estágio 2: Servidor de Produção com Nginx
+FROM nginx:alpine
+
+# Copia os arquivos compilados do estágio de build para o diretório do Nginx
+COPY --from=builder /app/dist/angular-app/browser /usr/share/nginx/html
+
+# Copia a configuração customizada do Nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expõe a porta 80
+EXPOSE 80
+
+# O comando padrão da imagem nginx (nginx -g 'daemon off;') será usado para iniciar.
