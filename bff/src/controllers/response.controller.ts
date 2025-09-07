@@ -38,7 +38,7 @@ async function streamProgress(req:Request, res:Response) {
       if(running < 0) running=0;
       let processed = data.processed;
       let failed = data.failed;
-      let progress:Progress = {pending, running, processed, failed}
+      let progress:Progress = {pending, running, processed, failed, start: data.start, end: data.end}
       res.write(`data: ${JSON.stringify(progress)}\n\n`);
     });
   } catch (err) {

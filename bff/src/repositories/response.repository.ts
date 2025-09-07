@@ -38,7 +38,8 @@ async function updateFieldProgress(field:string) {
   await database.table('paper_valuation_progress')
     .get('main')
     .update((row:any)  => ({
-      [column]: row(column).default(0).add(1)
+      [column]: row(column).default(0).add(1),
+      end: Date.now()
     }));
 }
 

@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({ providedIn: 'root' })
 export class CommandService {
 
-  public readonly progress = signal<CommandProgress>({pending: 0, running: 0, processed: 0, failed: 0});
+  public readonly progress = signal<CommandProgress>({pending: 0, running: 0, processed: 0, failed: 0, start: 0, end: 0});
 
   private eventSource?: EventSource;
 

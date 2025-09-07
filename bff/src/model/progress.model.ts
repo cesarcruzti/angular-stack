@@ -3,4 +3,6 @@ export interface Progress {
     running: number;
     processed: number;
     failed: number;
+    start: number;
+    end: number;
 }

@@ -7,7 +7,8 @@ const { v4: uuidv4 } = require('uuid');
 const COMMAND_TOPIC = 'asset.management.consumer.paper.valuation.command';
 
 async function send(commands:Command[]) {
-  updateProgress({pending: commands.length, running: 0, processed: 0, failed: 0});
+  let start = Date.now();
+  updateProgress({pending: commands.length, running: 0, processed: 0, failed: 0, start, end: start });
   let referenceDate = daysSinceEpoch();
   commands.forEach(async c=>{
     let key = uuidv4();

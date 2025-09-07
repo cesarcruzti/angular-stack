@@ -20,7 +20,7 @@ export class CommandProgressComponent implements OnInit, OnDestroy {
 
   @Input() max = 0;
 
-  progress: CommandProgress = { pending: 0, running: 0, processed: 0, failed: 0 };
+  progress: CommandProgress = { pending: 0, running: 0, processed: 0, failed: 0, start: 0, end: 0 };
 
   isActive: Signal<boolean>;
 
@@ -56,5 +56,14 @@ export class CommandProgressComponent implements OnInit, OnDestroy {
 
   getFillPercent(value: number): number {
     return Math.min(100, (value / this.max) * 100);
+  }
+
+  getTime(){
+    let duration_ms = this.progress.end - this.progress.start;
+    let duration_s = Math.floor(duration_ms / 1000);
+    let minutes = Math.floor(duration_s / 60);
+    let seconds = duration_s % 60;
+
+    return `(${minutes}m ${seconds}s)`; 
   }
 }

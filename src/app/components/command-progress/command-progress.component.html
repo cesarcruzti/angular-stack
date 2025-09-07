@@ -41,7 +41,7 @@
         </svg>
         <div class="circle-value">{{ progress.running }}</div>
       </div>
-      <div class="circle-label">Processando</div>
+      <div class="circle-label">Processando {{ getTime() }}</div>
     </div>
     <span class="arrow" [class.active]="isActive()">➝</span>
     <div class="circle-container">
