@@ -1,15 +1,23 @@
 version: '3.8'
+
 services:
   rethinkdb:
     image: rethinkdb:latest
     container_name: rethinkdb
     ports:
-      - "8280:8080" # Admin UI
-      - "28015:28015" # Client driver port
-      - "29015:29015" # Intra-cluster port
+      - "8280:8080"
+      - "28015:28015"
+      - "29015:29015"
     volumes:
-      - rethinkdb_data:/data # Persistent data volume
+      - rethinkdb_data:/data
     restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - default
 
   bff:
     build:
@@ -19,19 +27,30 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - rethinkdb
+      rethinkdb:
+        condition: service_healthy
     environment:
       - PORT=3000
-      - KAFKA_BROKERS=host.docker.internal:9092
+      - KAFKA_BROKERS=kafka:29092
       - KAFKA_CLIENT_ID=bff-client
       - KAFKA_CONSUMER_GROUP=bff-consumer-group
       - COMMAND_TOPIC=asset.management.consumer.paper.valuation.command
       - RESPONSE_TOPIC=asset.management.producer.paper.valuation.response
-      - SCHEMA_REGISTRY=http://host.docker.internal:8081
-      - DB_HOST=rethinkdb # Use the service name as the host
+      - SCHEMA_REGISTRY=http://schema-registry:8081
+      - DB_HOST=rethinkdb
       - DB_PORT=28015
       - DB_NAME=bff
     restart: always
+    networks:
+      - default
+      - kafka_network
 
 volumes:
   rethinkdb_data:
+
+networks:
+  default:
+    driver: bridge
+  kafka_network:
+    name: default_default
+    external: true

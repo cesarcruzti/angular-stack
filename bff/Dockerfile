@@ -17,6 +17,9 @@ COPY . .
 # Compile o código TypeScript para JavaScript
 RUN npm run build
 
+# Copie os arquivos de schema para o diretório de distribuição
+COPY src/config/schemas dist/config/schemas
+
 # Exponha a porta em que a aplicação será executada
 EXPOSE 3000
 
