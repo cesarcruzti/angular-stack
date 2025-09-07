@@ -2,7 +2,7 @@ import { sendMessage } from '../config/kafka';
 import { Command } from '../model/command.model';
 import { updateProgress } from '../repositories/response.repository';
 import { daysSinceEpoch } from '../utils/datetime';
-const { v4: uuidv4 } = require('uuid');
+import { v4 as uuidv4 } from 'uuid';
 
 const COMMAND_TOPIC = 'asset.management.consumer.paper.valuation.command';
 
@@ -10,16 +10,18 @@ async function send(commands:Command[]) {
   let start = Date.now();
   updateProgress({pending: commands.length, running: 0, processed: 0, failed: 0, start, end: start });
   let referenceDate = daysSinceEpoch();
-  commands.forEach(async c=>{
-    let key = uuidv4();
+
+  const sendPromises = commands.map(c => {
     const command:any = { 
-        commandId: key,
+        commandId: uuidv4(),
         initialEntity:  c.initialEntity, 
         finalEntity: c.finalEntity, 
         referenceDate
     };
-    await sendMessage(COMMAND_TOPIC, key, command);
-  })
+    return sendMessage(COMMAND_TOPIC, command);
+  });
+
+  await Promise.all(sendPromises);
 }
 
 export { send };

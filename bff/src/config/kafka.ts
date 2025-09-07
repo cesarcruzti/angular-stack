@@ -28,13 +28,13 @@ async function connectKafka() {
 }
 
 // Publicar comando no Kafka com Avro
-async function sendMessage(topic:string, key:string, message:any) {
+async function sendMessage(topic:string, message:any) {
   const { id } = await registry.register(commandSchema);
   const encodedMessage = await registry.encode(id, message);
 
   await producer.send({
     topic,
-    messages: [{ key, value: encodedMessage }],
+    messages: [{ value: encodedMessage }],
   });
 }
 
