@@ -21,6 +21,7 @@ const config = {
     host: process.env.DB_HOST || 'localhost',
     port: process.env.DB_PORT || 28015,
     name: process.env.DB_NAME || 'bff',
+    password: process.env.DB_PASSWORD || 'rethinkdb'
   }
 };
 

@@ -6,6 +6,7 @@ const database = rethinkdbdash({
     host: config.db.host,
     port: config.db.port,
     db: config.db.name,
+    password: config.db.password
 });
 
 const tableProgress = 'paper_valuation_progress';

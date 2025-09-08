@@ -22,7 +22,7 @@ APP_IMAGE_NAME="angular-app"
 BFF_IMAGE_NAME="bff"
 
 # A tag da imagem.
-IMAGE_TAG="latest"
+IMAGE_TAG="1.0.0"
 
 # --- Construção e Envio da Imagem do Frontend (Angular) ---
 echo "Construindo a imagem para ${APP_IMAGE_NAME}..."

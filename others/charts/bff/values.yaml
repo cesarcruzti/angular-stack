@@ -74,6 +74,7 @@ env:
   COMMAND_TOPIC: "asset.management.consumer.paper.valuation.command"
   RESPONSE_TOPIC: "asset.management.producer.paper.valuation.response"
   SCHEMA_REGISTRY: "http://schema-registry:8081"
-  DB_HOST: "rethinkdb"
+  DB_HOST: "rethinkdb-rethinkdb-cluster"
   DB_PORT: "28015"
   DB_NAME: "bff"
+  DB_PASSWORD: "rethinkdb"
