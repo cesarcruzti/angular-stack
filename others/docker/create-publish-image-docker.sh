@@ -27,7 +27,7 @@ IMAGE_TAG="1.0.0"
 # --- Construção e Envio da Imagem do Frontend (Angular) ---
 echo "Construindo a imagem para ${APP_IMAGE_NAME}..."
 # Usa caminhos absolutos para o Dockerfile e o contexto de build.
-docker build -t "${REGISTRY_URL}/${APP_IMAGE_NAME}:${IMAGE_TAG}" -f "${PROJECT_ROOT}/Dockerfile" "${PROJECT_ROOT}"
+docker build -t "${REGISTRY_URL}/${APP_IMAGE_NAME}:${IMAGE_TAG}" -f "${PROJECT_ROOT}/Dockerfile-prod" "${PROJECT_ROOT}"
 
 echo "Enviando a imagem ${APP_IMAGE_NAME} para o registry..."
 docker push "${REGISTRY_URL}/${APP_IMAGE_NAME}:${IMAGE_TAG}"
