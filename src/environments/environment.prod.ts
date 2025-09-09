@@ -2,7 +2,7 @@ export const environment = {
   production: true,
   keycloak: {
     config: {
-      url: 'http://keycloak.localdev.me/auth',
+      url: 'https://keycloak.localdev.me/auth',
       realm: 'open',
       clientId: 'angular-app'
     },
