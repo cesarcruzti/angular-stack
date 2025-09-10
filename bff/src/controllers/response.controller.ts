@@ -43,12 +43,15 @@ async function streamProgress(req:Request, res:Response) {
   let cursor:any;
   try {
     cursor = await watchProgress((data:any) => {
-      let pending = data.pending-data.running;
-      let running = data.running-data.processed-data.failed;
-      if(running < 0) running=0;
-      let processed = data.processed;
-      let failed = data.failed;
-      let progress:Progress = {pending, running, processed, failed, start: data.start, end: data.end}
+      const progress: Progress = {
+        pending: data.pending - data.running,
+        running: Math.max(0, data.running - data.processed - data.failed),
+        processed: data.processed,
+        failed: data.failed,
+        start: data.start,
+        end: data.end,
+        expected: data.expected,
+      };
       res.write(`data: ${JSON.stringify(progress)}\n\n`);
     });
   } catch (err) {

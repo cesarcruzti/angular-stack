@@ -18,9 +18,7 @@ export class CommandProgressComponent implements OnInit, OnDestroy {
 
   private service = inject(CommandService);
 
-  @Input() max = 0;
-
-  progress: CommandProgress = { pending: 0, running: 0, processed: 0, failed: 0, start: 0, end: 0 };
+  progress: CommandProgress = { pending: 0, running: 0, processed: 0, failed: 0, start: 0, end: 0, expected: 0};
 
   isActive: Signal<boolean>;
 
@@ -55,7 +53,7 @@ export class CommandProgressComponent implements OnInit, OnDestroy {
   }
 
   getFillPercent(value: number): number {
-    return Math.min(100, (value / this.max) * 100);
+    return Math.min(100, (value / this.progress.expected) * 100);
   }
 
   getTime(){

@@ -44,11 +44,6 @@
 
   </mat-card>
 
-  <mat-card class="data-card">
-    <mat-card-content>
-      <app-command-progress [max]="paperRangesSignal().length"></app-command-progress>
-    </mat-card-content>
-  </mat-card>
   } @else {
   <mat-card class="no-data-card">
     <mat-card-content>
@@ -56,4 +51,12 @@
     </mat-card-content>
   </mat-card>
   }
+  <mat-card class="data-card">
+    <mat-card-header>
+      <mat-card-title>Processing Commands</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <app-command-progress></app-command-progress>
+    </mat-card-content>
+  </mat-card>
 </div>

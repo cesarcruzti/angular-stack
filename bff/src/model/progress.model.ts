@@ -1,4 +1,5 @@
 export interface Progress {
+    expected: number;
     pending: number;
     running: number;
     processed: number;

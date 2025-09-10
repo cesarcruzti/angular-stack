@@ -8,7 +8,7 @@ const COMMAND_TOPIC = 'asset.management.consumer.paper.valuation.command';
 
 async function send(commands:Command[]) {
   let start = Date.now();
-  updateProgress({pending: commands.length, running: 0, processed: 0, failed: 0, start, end: start });
+  updateProgress({pending: commands.length, running: 0, processed: 0, failed: 0, start, end: start, expected: commands.length });
   let referenceDate = daysSinceEpoch();
 
   const sendPromises = commands.map(c => {
