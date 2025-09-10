@@ -8,9 +8,6 @@ services:
       - "8280:8080"
       - "28015:28015"
       - "29015:29015"
-    command: ["rethinkdb", "--initial-password", "${RETHINKDB_ADMIN_PASSWORD}"]
-    environment:
-      RETHINKDB_ADMIN_PASSWORD: "rethinkdb"
     volumes:
       - rethinkdb_data:/data
     restart: always
@@ -43,7 +40,6 @@ services:
       - DB_HOST=rethinkdb
       - DB_PORT=28015
       - DB_NAME=bff
-      - DB_PASSWORD=rethinkdb
     restart: always
     networks:
       - default
