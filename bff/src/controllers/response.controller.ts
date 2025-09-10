@@ -18,7 +18,12 @@ async function streamResponses(req:Request, res:Response) {
     res.end();
   }
 
+  const interval = setInterval(() => {
+    res.write(`: ping\n\n`);
+  }, 15000);
+
   req.on('close', () => {
+    clearInterval(interval);
     if (cursor) cursor.close();
     res.end();
   });
