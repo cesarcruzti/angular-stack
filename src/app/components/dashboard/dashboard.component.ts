@@ -67,7 +67,9 @@ export class DashboardComponent {
     this.currentPage.set(event.pageIndex);
   }
 
-  ruleSendCommand(): boolean {
-    return this.paginatedRanges().length == 0 || this.commandService.progress().expected > 0 || this.commandService.progress().running > 0;
-  }
+  public readonly disableSendCommand = computed(() => {
+    const rangesEmpty = this.paginatedRanges().length === 0;
+    const prog = this.commandService.progress();
+    return rangesEmpty || prog.pending > 0 || prog.running > 0;
+  });
 }
