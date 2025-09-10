@@ -8,8 +8,13 @@ async function streamResponses(req:Request, res:Response) {
   res.setHeader('Connection', 'keep-alive');
   res.flushHeaders();
 
+  const interval = setInterval(() => {
+    res.write(`: ping\n\n`);
+  }, 15000);
+
   let cursor:any;
   try {
+    
     cursor = await watchChanges((data:any) => {
       res.write(`data: ${JSON.stringify(data)}\n\n`);
     });
@@ -17,10 +22,6 @@ async function streamResponses(req:Request, res:Response) {
     res.write(`data: ${JSON.stringify({ error: 'Failed to init stream' })}\n\n`);
     res.end();
   }
-
-  const interval = setInterval(() => {
-    res.write(`: ping\n\n`);
-  }, 15000);
 
   req.on('close', () => {
     clearInterval(interval);
@@ -34,6 +35,10 @@ async function streamProgress(req:Request, res:Response) {
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
   res.flushHeaders();
+
+  const interval = setInterval(() => {
+    res.write(`: ping\n\n`);
+  }, 15000);
 
   let cursor:any;
   try {
@@ -50,8 +55,9 @@ async function streamProgress(req:Request, res:Response) {
     res.write(`data: ${JSON.stringify({ error: 'Failed to init stream' })}\n\n`);
     res.end();
   }
-
+  
   req.on('close', () => {
+    clearInterval(interval);
     if (cursor) cursor.close();
     res.end();
   });
