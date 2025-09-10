@@ -32,6 +32,7 @@ import { CommandService } from '../../services/command.service';
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
+
   private apiService = inject(ApiService);
   private commandService = inject(CommandService);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -64,5 +65,9 @@ export class DashboardComponent {
   onPageChange(event: PageEvent): void {
     this.pageSize = event.pageSize;
     this.currentPage.set(event.pageIndex);
+  }
+
+  ruleSendCommand(): boolean {
+    return this.paginatedRanges().length == 0 || this.commandService.progress().expected > 0 || this.commandService.progress().running > 0;
   }
 }

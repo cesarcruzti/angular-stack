@@ -39,7 +39,7 @@
     <mat-divider></mat-divider>
     <mat-card-footer class="card-footer">
         <button mat-raised-button color="primary" (click)="processingCommand()"
-          [disabled]="paginatedRanges().length == 0">Processing Commands</button>
+          [disabled]="ruleSendCommand()">Send Commands</button>
     </mat-card-footer>
 
   </mat-card>
@@ -51,10 +51,8 @@
     </mat-card-content>
   </mat-card>
   }
+  <h2>Processing Commands</h2>
   <mat-card class="data-card">
-    <mat-card-header>
-      <mat-card-title>Processing Commands</mat-card-title>
-    </mat-card-header>
     <mat-card-content>
       <app-command-progress></app-command-progress>
     </mat-card-content>
