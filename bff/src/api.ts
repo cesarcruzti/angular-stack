@@ -5,7 +5,7 @@ import responseRoutes from './routes/response.routes';
 
 const api = express();
 
-api.use(bodyParser.json());
+api.use(bodyParser.json({ limit: '50mb' }));
 api.use('/send', commandRoutes);
 api.use('/stream', responseRoutes);
 
