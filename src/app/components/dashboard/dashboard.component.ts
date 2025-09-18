@@ -12,6 +12,8 @@ import { ApiService } from '../../services/api.service';
 import { PaperRange } from '../../model/paper-range.model';
 import { CommandProgressComponent } from '../command-progress/command-progress.component';
 import { CommandService } from '../../services/command.service';
+import { finalize } from 'rxjs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,7 +28,8 @@ import { CommandService } from '../../services/command.service';
     MatGridListModule,
     MatDividerModule,
     MatPaginatorModule,
-    CommandProgressComponent
+    CommandProgressComponent,
+    MatProgressSpinnerModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
@@ -40,6 +43,7 @@ export class DashboardComponent {
   public rangeSize: number = 500;
   public pageSize: number = 5;
   public currentPage = signal(0);
+  public isProcessing = signal(false);
 
   public paperRangesSignal = this.apiService.paperRangesSignal;
 
@@ -57,7 +61,12 @@ export class DashboardComponent {
   }
 
   processingCommand(): void {
-    this.commandService.sendCommand(this.paperRangesSignal()).subscribe(response=>{
+    this.isProcessing.set(true);
+    this.commandService.sendCommand(this.paperRangesSignal())
+    .pipe(
+      finalize(() => this.isProcessing.set(false))
+    )
+    .subscribe(response=>{
       console.log(response);
     })
   }
@@ -68,8 +77,8 @@ export class DashboardComponent {
   }
 
   public readonly disableSendCommand = computed(() => {
-    const rangesEmpty = this.paginatedRanges().length === 0;
+    const rangesEmpty = this.paperRangesSignal().length === 0;
     const prog = this.commandService.progress();
-    return rangesEmpty || prog.pending > 0 || prog.running > 0;
+    return rangesEmpty || prog.pending > 0 || prog.running > 0 || this.isProcessing();
   });
 }

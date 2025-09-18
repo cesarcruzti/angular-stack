@@ -1,11 +1,29 @@
 #!/bin/bash
 
-# Este script constrói as imagens Docker para a aplicação Angular (frontend)
-# e para o BFF (Backend For Frontend), e depois as envia para um registry Docker local.
+# Este script constrói a imagem Docker para uma aplicação específica (angular-app ou bff)
+# e a envia para um registry Docker local.
 # Ele foi projetado para ser executado de qualquer diretório.
 
 # Aborta o script se qualquer comando falhar.
 set -e
+
+# --- Funções ---
+# Mostra uma mensagem de uso se o script for chamado incorretamente.
+usage() {
+  echo "Uso: $0 [angular-app|bff]"
+  echo "  angular-app: Constrói e envia a imagem do frontend Angular."
+  echo "  bff: Constrói e envia a imagem do Backend For Frontend."
+  exit 1
+}
+
+# --- Validação do Input ---
+# Verifica se foi fornecido exatamente um argumento.
+if [ "$#" -ne 1 ]; then
+  echo "Erro: Número incorreto de argumentos."
+  usage
+fi
+
+APP_TO_BUILD=$1
 
 # --- Determina os Caminhos Absolutos ---
 # Encontra o diretório onde o script está localizado.
@@ -16,31 +34,34 @@ PROJECT_ROOT=$(realpath "$SCRIPT_DIR/../../")
 # --- Configurações ---
 # O endereço do registry Docker.
 REGISTRY_URL="localhost:5001"
-
-# Nomes das imagens.
-APP_IMAGE_NAME="angular-app"
-BFF_IMAGE_NAME="bff"
-
 # A tag da imagem.
 IMAGE_TAG="1.0.0"
 
-# --- Construção e Envio da Imagem do Frontend (Angular) ---
-echo "Construindo a imagem para ${APP_IMAGE_NAME}..."
-# Usa caminhos absolutos para o Dockerfile e o contexto de build.
-docker build -t "${REGISTRY_URL}/${APP_IMAGE_NAME}:${IMAGE_TAG}" -f "${PROJECT_ROOT}/Dockerfile-prod" "${PROJECT_ROOT}"
-
-echo "Enviando a imagem ${APP_IMAGE_NAME} para o registry..."
-docker push "${REGISTRY_URL}/${APP_IMAGE_NAME}:${IMAGE_TAG}"
-echo "${APP_IMAGE_NAME} enviada com sucesso."
-
-# --- Construção e Envio da Imagem do BFF ---
-echo "Construindo a imagem para ${BFF_IMAGE_NAME}..."
-# Usa caminhos absolutos para o Dockerfile do BFF e o contexto de build.
-docker build -t "${REGISTRY_URL}/${BFF_IMAGE_NAME}:${IMAGE_TAG}" -f "${PROJECT_ROOT}/bff/Dockerfile" "${PROJECT_ROOT}/bff"
-
-echo "Enviando a imagem ${BFF_IMAGE_NAME} para o registry..."
-docker push "${REGISTRY_URL}/${BFF_IMAGE_NAME}:${IMAGE_TAG}"
-echo "${BFF_IMAGE_NAME} enviada com sucesso."
+# --- Lógica de Build e Push ---
+case "$APP_TO_BUILD" in
+  angular-app)
+    echo "Construindo a imagem para angular-app..."
+    docker build -t "${REGISTRY_URL}/angular-app:${IMAGE_TAG}" -f "${PROJECT_ROOT}/Dockerfile-prod" "${PROJECT_ROOT}"
+    
+    echo "Enviando a imagem angular-app para o registry..."
+    docker push "${REGISTRY_URL}/angular-app:${IMAGE_TAG}"
+    echo "angular-app enviada com sucesso."
+    ;;
+  
+  bff)
+    echo "Construindo a imagem para bff..."
+    docker build -t "${REGISTRY_URL}/bff:${IMAGE_TAG}" -f "${PROJECT_ROOT}/bff/Dockerfile" "${PROJECT_ROOT}/bff"
+    
+    echo "Enviando a imagem bff para o registry..."
+    docker push "${REGISTRY_URL}/bff:${IMAGE_TAG}"
+    echo "bff enviada com sucesso."
+    ;;
+  
+  *)
+    echo "Erro: Opção inválida '$APP_TO_BUILD'"
+    usage
+    ;;
+esac
 
 # --- Conclusão ---
-echo "Script concluído. Todas as imagens foram construídas e enviadas para ${REGISTRY_URL}."
+echo "Script concluído. A imagem para ${APP_TO_BUILD} foi construída e enviada para ${REGISTRY_URL}."

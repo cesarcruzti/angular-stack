@@ -38,8 +38,13 @@
     </mat-card-content>
     <mat-divider></mat-divider>
     <mat-card-footer class="card-footer">
-        <button mat-raised-button color="primary" (click)="processingCommand()"
-          [disabled]="disableSendCommand()">Send Commands</button>
+        <button mat-raised-button color="primary" (click)="processingCommand()" [disabled]="disableSendCommand()">
+          @if (isProcessing()) {
+            <mat-spinner [diameter]="20"></mat-spinner>
+          } @else {
+            Send Commands
+          }
+        </button>
     </mat-card-footer>
 
   </mat-card>
