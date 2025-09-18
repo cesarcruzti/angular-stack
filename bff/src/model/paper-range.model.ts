@@ -1,4 +1,4 @@
-export interface Command {
+export interface PaperRange {
     initialEntity: number;
     finalEntity: number;
 }
