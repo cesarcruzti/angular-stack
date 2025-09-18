@@ -45,25 +45,30 @@ async function sendMessages(paperRanges: PaperRange[], headers: any) {
   if (!paperRanges || paperRanges.length === 0) {
     return;
   }
-  let referenceDate = daysSinceEpoch();
-  const { id } = await registry.register(commandSchema);
-  const encodedMessages = await Promise.all(
-    paperRanges.map(async (range) => {
-      const message = {
-        commandId: uuidv4(),
-        initialEntity: range.initialEntity,
-        finalEntity: range.finalEntity,
-        referenceDate
-      }
-      const encoded = await registry.encode(id, message);
-      return { value: encoded, headers: headers };
-    })
-  );
   const topic = config.kafka.commandTopic || '';
-  await producer.send({
-    topic,
-    messages: encodedMessages,
-  });
+  const referenceDate = daysSinceEpoch();
+  const { id } = await registry.register(commandSchema);
+
+  const chunkSize = 100;
+  for (let i = 0; i < paperRanges.length; i += chunkSize) {
+    const chunk = paperRanges.slice(i, i + chunkSize);
+    const encodedMessages = await Promise.all(
+      chunk.map(async (range) => {
+        const message = {
+          commandId: uuidv4(),
+          initialEntity: range.initialEntity,
+          finalEntity: range.finalEntity,
+          referenceDate
+        }
+        const encoded = await registry.encode(id, message);
+        return { value: encoded, headers: headers };
+      })
+    );
+    await producer.send({
+      topic,
+      messages: encodedMessages,
+    });
+  }
 }
 
 
