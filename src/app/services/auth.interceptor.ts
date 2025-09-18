@@ -1,12 +1,14 @@
-import { HttpInterceptorFn, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpInterceptorFn, HttpHeaders, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import Keycloak from 'keycloak-js';
 import { TraceService } from './trace.service';
-import { tap } from 'rxjs';
+import { tap, catchError, throwError } from 'rxjs';
+import { Router } from '@angular/router';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const keycloak = inject(Keycloak);
   const traceService = inject(TraceService);
+  const router = inject(Router);
 
   const traceHeaders = traceService.getHeaders();
 
@@ -28,6 +30,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         };
         traceService.setHeaders(newTrace);
       }
+    }),
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 401) {
+        router.navigate(['/unauthorised']);
+      }
+      return throwError(() => error);
     })
   );
 };

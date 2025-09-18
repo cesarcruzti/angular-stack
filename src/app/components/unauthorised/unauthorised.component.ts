@@ -18,7 +18,7 @@ export class UnauthorisedComponent {
     const options: KeycloakLogoutOptions = {
       redirectUri: window.location.origin + '/'
     };
-    this.keycloak.logout(options);
+    this.keycloak.login(options);
   }
 
 }
