@@ -6,7 +6,20 @@ const database = rethinkdbdash({
     host: config.db.host,
     port: config.db.port,
     db: config.db.name,
-    password: config.db.password
+    password: config.db.password,
+    timeout: 60
+});
+
+database.getPoolMaster().on('healthy', (healthy: boolean) => {
+  if (healthy) {
+    info('RethinkDB connection pool is healthy.');
+  } else {
+    error('RethinkDB connection pool is not healthy.', healthy);
+  }
+});
+
+database.getPoolMaster().on('error', (err: Error) => {
+  error('RethinkDB connection pool error:', err);
 });
 
 const tableProgress = 'paper_valuation_progress';

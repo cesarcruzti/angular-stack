@@ -10,9 +10,14 @@ import { v4 as uuidv4 } from 'uuid';
 const kafka = new Kafka({
   clientId: config.kafka.clientId,
   brokers: config.kafka.brokers,
+  connectionTimeout: 30000,
 });
 
-const producer = kafka.producer();
+const producer = kafka.producer({
+  transactionalId: `${config.kafka.clientId}-producer`,
+  maxInFlightRequests: 1,
+  idempotent: true,
+});
 const consumer = kafka.consumer({ groupId: config.kafka.consumerGroup });
 
 // Schema Registry
@@ -49,25 +54,32 @@ async function sendMessages(paperRanges: PaperRange[], headers: any) {
   const referenceDate = daysSinceEpoch();
   const { id } = await registry.register(commandSchema);
 
-  const chunkSize = 100;
-  for (let i = 0; i < paperRanges.length; i += chunkSize) {
-    const chunk = paperRanges.slice(i, i + chunkSize);
-    const encodedMessages = await Promise.all(
-      chunk.map(async (range) => {
-        const message = {
-          commandId: uuidv4(),
-          initialEntity: range.initialEntity,
-          finalEntity: range.finalEntity,
-          referenceDate
-        }
-        const encoded = await registry.encode(id, message);
-        return { value: encoded, headers: headers };
-      })
-    );
-    await producer.send({
-      topic,
-      messages: encodedMessages,
-    });
+  const transaction = await producer.transaction();
+  try {
+    const chunkSize = 100;
+    for (let i = 0; i < paperRanges.length; i += chunkSize) {
+      const chunk = paperRanges.slice(i, i + chunkSize);
+      const encodedMessages = await Promise.all(
+        chunk.map(async (range) => {
+          const message = {
+            commandId: uuidv4(),
+            initialEntity: range.initialEntity,
+            finalEntity: range.finalEntity,
+            referenceDate
+          }
+          const encoded = await registry.encode(id, message);
+          return { value: encoded, headers: headers };
+        })
+      );
+      await transaction.send({
+        topic,
+        messages: encodedMessages,
+      });
+    }
+    await transaction.commit();
+  } catch (e) {
+    await transaction.abort();
+    throw e;
   }
 }
 
