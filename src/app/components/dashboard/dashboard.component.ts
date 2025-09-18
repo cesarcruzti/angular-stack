@@ -14,6 +14,7 @@ import { CommandProgressComponent } from '../command-progress/command-progress.c
 import { CommandService } from '../../services/command.service';
 import { finalize } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TraceService } from '../../services/trace.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -38,6 +39,7 @@ export class DashboardComponent {
 
   private apiService = inject(ApiService);
   private commandService = inject(CommandService);
+  private traceService = inject(TraceService);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   
   public rangeSize: number = 500;
@@ -54,6 +56,7 @@ export class DashboardComponent {
   });
 
   fetchRanges(): void {
+    this.traceService.clearHeaders();
     if (this.paginator) {
       this.paginator.firstPage();
     }
@@ -66,8 +69,8 @@ export class DashboardComponent {
     .pipe(
       finalize(() => this.isProcessing.set(false))
     )
-    .subscribe(response=>{
-      console.log(response);
+    .subscribe(()=>{
+      this.paperRangesSignal.set([]);
     })
   }
 

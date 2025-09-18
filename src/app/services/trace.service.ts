@@ -5,6 +5,11 @@ export class TraceService {
   private traceparent?: string;
   private correlationid?: string;
 
+  clearHeaders() {
+    this.traceparent = undefined;
+    this.correlationid = undefined;
+  }
+
   setHeaders(headers: { traceparent?: string; correlationid?: string }) {
     if (headers.traceparent) {
       this.traceparent = headers.traceparent;
