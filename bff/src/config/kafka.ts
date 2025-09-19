@@ -50,7 +50,7 @@ async function sendMessages(paperRanges: PaperRange[], headers: any) {
   const referenceDate = daysSinceEpoch();
   const { id } = await registry.register(commandSchema);
 
-  const chunkSize = 100;
+  const chunkSize = 1000;
   for (let i = 0; i < paperRanges.length; i += chunkSize) {
     const chunk = paperRanges.slice(i, i + chunkSize);
     const encodedMessages = await Promise.all(

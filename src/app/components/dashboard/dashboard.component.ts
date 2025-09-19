@@ -68,10 +68,7 @@ export class DashboardComponent {
     this.commandService.sendCommand(this.paperRangesSignal())
     .pipe(
       finalize(() => this.isProcessing.set(false))
-    )
-    .subscribe(()=>{
-      this.paperRangesSignal.set([]);
-    })
+    ).subscribe();
   }
 
   onPageChange(event: PageEvent): void {

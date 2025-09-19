@@ -40,7 +40,12 @@
     <mat-card-footer class="card-footer">
         <button mat-raised-button color="primary" (click)="processingCommand()" [disabled]="disableSendCommand()">
           @if (isProcessing()) {
-            <mat-spinner [diameter]="20"></mat-spinner>
+            <div class="spinner-inline">
+              <mat-spinner [diameter]="20" aria-label="Processing"></mat-spinner>
+              <span>Sending commands...</span>
+            </div>
+          } @else if(disableSendCommand()) {
+            Processing...
           } @else {
             Send Commands
           }
