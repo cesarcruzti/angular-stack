@@ -11,12 +11,18 @@ async function insertCommands(data:Command[]) {
 
 async function watchChangesCommand(callback:any) {
   const cursor = await database.table('paper_valuation_command').changes().run();
-  cursor.each((err:any, change:any) => {
+  cursor.each(async (err:any, change:any) => {
     if (err) {
       console.error('Error in changefeed', err);
       return;
     }
-    if (change.new_val) callback(change.new_val);
+    if (change.new_val) {
+      try {
+        await callback(change.new_val);
+      } catch (e) {
+        console.error('Error in changefeed callback', e);
+      }
+    }
   });
   return cursor;
 }
