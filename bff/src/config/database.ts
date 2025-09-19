@@ -26,6 +26,7 @@ const tableProgress = 'paper_valuation_progress';
 const keyProgress = "main";
 const tableResponse = 'paper_valuation_response';
 const indexResponse = 'commandId';
+const tableCommand = 'paper_valuation_command';
 
 async function setupDatabase() {
     try {
@@ -53,6 +54,11 @@ async function setupDatabase() {
         if (!indexList.includes(indexResponse)) {
             await database.table(tableResponse).indexCreate(indexResponse).run();
             info(`Index '${indexResponse}' created.`);
+        }
+
+        if (!tableList.includes(tableCommand)) {
+            await database.tableCreate(tableCommand).run();
+            info(`Table '${tableCommand}' created.`);
         }
 
     } catch (e) {

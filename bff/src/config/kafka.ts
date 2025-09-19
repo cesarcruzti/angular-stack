@@ -2,19 +2,21 @@ import { Kafka } from 'kafkajs';
 import { SchemaRegistry, readAVSC } from '@kafkajs/confluent-schema-registry';
 import avro from 'avsc';
 import config from './index';
-import { PaperRange } from '../model/paper-range.model';
-import { daysSinceEpoch } from '../utils/datetime';
-import { v4 as uuidv4 } from 'uuid';
+import { Command } from '../model/command.model';
+import { info } from '../utils/logger';
 
 // Inicializa Kafka
 const kafka = new Kafka({
   clientId: config.kafka.clientId,
   brokers: config.kafka.brokers,
   connectionTimeout: 30000,
+  requestTimeout: 60000,
 });
 
 const producer = kafka.producer();
-const consumer = kafka.consumer({ groupId: config.kafka.consumerGroup });
+const consumer = kafka.consumer({
+  groupId: config.kafka.consumerGroup
+});
 
 // Schema Registry
 const registry = new SchemaRegistry({ host: config.kafka.schemaRegistry });
@@ -26,52 +28,40 @@ const responseSchemaJSON = readAVSC(config.kafka.schemas.response);
 // Cria tipo Avro para validação adicional
 const responseType = avro.Type.forSchema(responseSchemaJSON);
 
+let commandSchemaId: number;
+
 async function connectKafka() {
   await producer.connect();
   await consumer.connect();
 }
 
-// Publicar comando no Kafka com Avro
-async function sendMessage(message: any, headers: any) {
+async function registerSchemas() {
   const { id } = await registry.register(commandSchema);
-  const encodedMessage = await registry.encode(id, message);
+  commandSchemaId = id;
+  info(`Schema for command registered with ID: ${commandSchemaId}`);
+}
+
+// Publicar comando no Kafka com Avro
+async function sendMessage(command: Command) {
+  type CommandPartial = Omit<Command, "traceparent" | "correlationid" | "id">;
+  const { traceparent, correlationid, ...rest } = command;
+  const partial: CommandPartial = rest;
+  const encodedMessage = await registry.encode(commandSchemaId, partial);
   const topic = config.kafka.commandTopic || '';
+
+  const headers: { [key: string]: string } = {};
+  if (traceparent) {
+    headers.traceparent = traceparent;
+  }
+  if (correlationid) {
+    headers.correlationid = correlationid;
+  }
+
   await producer.send({
     topic,
-    messages: [{ value: encodedMessage, headers }],
+    messages: [{ value: encodedMessage, headers, key: command.commandId }],
   });
 }
-
-async function sendMessages(paperRanges: PaperRange[], headers: any) {
-  if (!paperRanges || paperRanges.length === 0) {
-    return;
-  }
-  const topic = config.kafka.commandTopic || '';
-  const referenceDate = daysSinceEpoch();
-  const { id } = await registry.register(commandSchema);
-
-  const chunkSize = 1000;
-  for (let i = 0; i < paperRanges.length; i += chunkSize) {
-    const chunk = paperRanges.slice(i, i + chunkSize);
-    const encodedMessages = await Promise.all(
-      chunk.map(async (range) => {
-        const message = {
-          commandId: uuidv4(),
-          initialEntity: range.initialEntity,
-          finalEntity: range.finalEntity,
-          referenceDate
-        }
-        const encoded = await registry.encode(id, message);
-        return { value: encoded, headers: headers };
-      })
-    );
-    await producer.send({
-      topic,
-      messages: encodedMessages,
-    });
-  }
-}
-
 
 async function consumeMessages(topic: string, callback: any) {
   await consumer.subscribe({ topic, fromBeginning: false });
@@ -93,4 +83,11 @@ async function consumeMessages(topic: string, callback: any) {
   });
 }
 
-export { connectKafka, sendMessage, sendMessages, consumeMessages, producer, consumer };
+export {
+  connectKafka,
+  sendMessage,
+  consumeMessages,
+  producer,
+  consumer,
+  registerSchemas,
+};

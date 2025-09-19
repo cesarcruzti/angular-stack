@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
-import { watchChanges, watchProgress } from '../repositories/response.repository';
 import { Progress } from '../model/progress.model';
+import { watchChangesResponse } from '../repositories/response.repository';
+import { watchProgress } from '../repositories/progress.repository';
 
 async function streamResponses(req:Request, res:Response) {
   res.setHeader('Content-Type', 'text/event-stream');
@@ -15,7 +16,7 @@ async function streamResponses(req:Request, res:Response) {
   let cursor:any;
   try {
     
-    cursor = await watchChanges((data:any) => {
+    cursor = await watchChangesResponse((data:any) => {
       res.write(`data: ${JSON.stringify(data)}\n\n`);
     });
   } catch (err) {
