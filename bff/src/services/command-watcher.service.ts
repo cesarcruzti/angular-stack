@@ -6,8 +6,8 @@ import { info, error } from '../utils/logger';
 async function startWatchingCommands() {
   info('Starting to watch for command changes...');
   try {
-    await watchChangesCommand((command: Command) => {
-      sendMessage(command);
+    await watchChangesCommand(async (command: Command) => {
+      await sendMessage(command);
     });
     info('Successfully watching for command changes.');
   } catch (err) {
