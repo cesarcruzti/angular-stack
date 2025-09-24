@@ -34,6 +34,6 @@ export class CommandService {
   }
 
   sendCommand(ranges: PaperRange[]){
-    return this.http.post('/bff/send/command', ranges);
+    return this.http.post('/bff/command', ranges);
   }
 }
