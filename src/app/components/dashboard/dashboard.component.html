@@ -67,4 +67,12 @@
       <app-command-progress></app-command-progress>
     </mat-card-content>
   </mat-card>
+  @if (chartInput) {
+    <mat-card class="data-card">
+      <mat-card-content>
+        <app-graph [input]="chartInput" />
+      </mat-card-content>
+    </mat-card>
+  }
+  
 </div>

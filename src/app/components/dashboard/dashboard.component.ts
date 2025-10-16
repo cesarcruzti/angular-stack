@@ -15,6 +15,8 @@ import { CommandService } from '../../services/command.service';
 import { finalize } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TraceService } from '../../services/trace.service';
+import { Graph } from '../graph/graph';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,7 +32,8 @@ import { TraceService } from '../../services/trace.service';
     MatDividerModule,
     MatPaginatorModule,
     CommandProgressComponent,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    Graph
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
@@ -46,6 +49,7 @@ export class DashboardComponent {
   public pageSize: number = 5;
   public currentPage = signal(0);
   public isProcessing = signal(false);
+  public chartInput: { categoria: string; valor: number; } | undefined;
 
   public paperRangesSignal = this.apiService.paperRangesSignal;
 
@@ -54,6 +58,16 @@ export class DashboardComponent {
     const start = this.currentPage() * this.pageSize;
     return all.slice(start, start + this.pageSize);
   });
+
+  constructor(){
+    const progress$ = toObservable(this.commandService.progress);
+    progress$.subscribe(p=>{
+      if(p.expected > 0 && p.processed == p.expected){
+        let duration_ms = p.end - p.start;
+        this.chartInput = {categoria: `${this.rangeSize}`, valor: duration_ms};
+      }
+    });
+  }
 
   fetchRanges(): void {
     this.traceService.clearHeaders();
