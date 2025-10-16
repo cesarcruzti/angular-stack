@@ -72,8 +72,6 @@ export class Graph {
   set input(data: { categoria: string; valor: number } | null) {
     if (!data) return;
 
-    console.log(data);
-
     const { categoria, valor } = data;
     const values = this.rawData.get(categoria) ?? [];
     values.push(valor);
