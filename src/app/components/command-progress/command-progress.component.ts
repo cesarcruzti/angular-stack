@@ -57,6 +57,10 @@ export class CommandProgressComponent implements OnInit, OnDestroy {
   }
 
   getTime() {
+    if(this.progress.processed < this.progress.expected){
+      return '';
+    }
+
     let duration_ms = this.progress.end - this.progress.start;
 
     if (duration_ms <= 0) {
