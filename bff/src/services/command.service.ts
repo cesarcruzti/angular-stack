@@ -52,7 +52,7 @@ export const getPerformanceHistory = async () => {
       const max = sorted[sorted.length - 1];
 
       data.push({
-        x: id,
+        x: `${id}`,
         y: [min, q1, median, q3, max]
       });
     }
