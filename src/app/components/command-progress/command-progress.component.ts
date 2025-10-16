@@ -3,7 +3,7 @@ import { CommandService } from '../../services/command.service';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { CommonModule } from '@angular/common';
-import { CommandProgress } from '../../model/command-progress.model';
+import { CommandProgress, createInitialProgress } from '../../model/command-progress.model';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { distinctUntilChanged, switchMap, of, timer } from 'rxjs';
 
@@ -18,7 +18,7 @@ export class CommandProgressComponent implements OnInit, OnDestroy {
 
   private service = inject(CommandService);
 
-  progress: CommandProgress = { pending: 0, running: 0, processed: 0, failed: 0, start: 0, end: 0, expected: 0};
+  progress: CommandProgress = createInitialProgress();
 
   isActive: Signal<boolean>;
 
@@ -56,12 +56,25 @@ export class CommandProgressComponent implements OnInit, OnDestroy {
     return Math.min(100, (value / this.progress.expected) * 100);
   }
 
-  getTime(){
+  getTime() {
     let duration_ms = this.progress.end - this.progress.start;
+
+    if (duration_ms <= 0) {
+        return '';
+    }
+
+    if (duration_ms < 1000) {
+        return `(${duration_ms}ms)`;
+    }
+
     let duration_s = Math.floor(duration_ms / 1000);
     let minutes = Math.floor(duration_s / 60);
     let seconds = duration_s % 60;
 
-    return `(${minutes}m ${seconds}s)`; 
+    if (duration_s < 60) {
+        return `(${seconds}s)`;
+    }
+
+    return `(${minutes}m ${seconds}s)`;
   }
 }
