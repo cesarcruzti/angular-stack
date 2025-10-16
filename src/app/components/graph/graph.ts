@@ -29,8 +29,7 @@ export type BoxPlotDatum = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Graph {
-  // Armazena valores brutos por categoria
-  private rawData = new Map<string, number[]>();
+  data: BoxPlotDatum[] = [];
 
   public chartSeries: ApexAxisChartSeries = [];
 
@@ -69,56 +68,20 @@ export class Graph {
 
   // ✅ Novo valor recebido
   @Input()
-  set input(data: { categoria: string; valor: number } | null) {
+  set input(data: BoxPlotDatum[] | []) {
     if (!data) return;
-
-    const { categoria, valor } = data;
-    const values = this.rawData.get(categoria) ?? [];
-    values.push(valor);
-    this.rawData.set(categoria, values);
-
-    this.updateChartSeries();
+    this.data = data;
+    this.updateChartSeries(data);
   }
 
-  private updateChartSeries() {
-    const data: BoxPlotDatum[] = [];
-
-    for (const [categoria, valores] of this.rawData.entries()) {
-      if (valores.length < 5) continue; // Ignora até ter 5 pontos
-
-      const sorted = [...valores].sort((a, b) => a - b);
-      const min = sorted[0];
-      const q1 = this.quantile(sorted, 0.25);
-      const median = this.quantile(sorted, 0.5);
-      const q3 = this.quantile(sorted, 0.75);
-      const max = sorted[sorted.length - 1];
-
-      data.push({
-        x: categoria,
-        y: [min, q1, median, q3, max]
-      });
-    }
-
+  private updateChartSeries(data: BoxPlotDatum[] | []) {
     this.chartSeries = [
       {
         name: 'BoxPlot',
         data
       }
     ];
-
-    // ✅ Atualiza a renderização manualmente
     this.cdr.markForCheck();
   }
 
-  private quantile(arr: number[], q: number): number {
-    const pos = (arr.length - 1) * q;
-    const base = Math.floor(pos);
-    const rest = pos - base;
-
-    if (arr[base + 1] !== undefined) {
-      return arr[base] + rest * (arr[base + 1] - arr[base]);
-    } else {
-      return arr[base];
-    }
-  }
 }

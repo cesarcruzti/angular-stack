@@ -33,4 +33,24 @@ async function updateProgress(progress:Progress) {
     .update(progress);
 }
 
-export { insertProgress, updateFieldProgress, updateProgress, watchProgress };
+async function insertPerformanceHistory(commandCount: number, time: number) {
+  const table = database.table('performance_history');
+
+  const updateResult = await table.get(commandCount).update((row:any) => ({
+    values: row('values').append(time)
+  })).run();
+
+  if (updateResult.replaced === 0 && updateResult.unchanged === 0) {
+    await table.insert({
+      id: commandCount,
+      values: [time]
+    }).run();
+  }
+}
+
+
+async function getPerformanceHistory() {
+  return database.table('performance_history').orderBy('id').run();
+}
+
+export { insertProgress, updateFieldProgress, updateProgress, watchProgress, insertPerformanceHistory, getPerformanceHistory };

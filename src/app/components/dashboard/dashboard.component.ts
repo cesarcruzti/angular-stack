@@ -15,7 +15,7 @@ import { CommandService } from '../../services/command.service';
 import { finalize } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TraceService } from '../../services/trace.service';
-import { Graph } from '../graph/graph';
+import { BoxPlotDatum, Graph } from '../graph/graph';
 import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -49,7 +49,7 @@ export class DashboardComponent {
   public pageSize: number = 5;
   public currentPage = signal(0);
   public isProcessing = signal(false);
-  public chartInput: { categoria: string; valor: number; } | undefined;
+  public chartInput: BoxPlotDatum[] = [];
 
   public paperRangesSignal = this.apiService.paperRangesSignal;
 
@@ -63,9 +63,15 @@ export class DashboardComponent {
     const progress$ = toObservable(this.commandService.progress);
     progress$.subscribe(p=>{
       if(p.expected > 0 && p.processed == p.expected){
-        let duration_ms = p.end - p.start;
-        this.chartInput = {categoria: `${this.rangeSize}`, valor: duration_ms};
+        this.fetchPerformanceHistory();
       }
+    });
+    this.fetchPerformanceHistory();
+  }
+
+  fetchPerformanceHistory(){
+    this.commandService.getPerformanceHistory().subscribe(data =>{
+      this.chartInput = data;
     });
   }
 

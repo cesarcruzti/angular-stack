@@ -27,6 +27,7 @@ const keyProgress = "main";
 const tableResponse = 'paper_valuation_response';
 const indexResponse = 'commandId';
 const tableCommand = 'paper_valuation_command';
+const tablePerformanceHistroy = 'performance_history';
 
 async function setupDatabase() {
     try {
@@ -59,6 +60,11 @@ async function setupDatabase() {
         if (!tableList.includes(tableCommand)) {
             await database.tableCreate(tableCommand).run();
             info(`Table '${tableCommand}' created.`);
+        }
+
+        if (!tableList.includes(tablePerformanceHistroy)) {
+            await database.tableCreate(tablePerformanceHistroy).run();
+            info(`Table '${tablePerformanceHistroy}' created.`);
         }
 
     } catch (e) {

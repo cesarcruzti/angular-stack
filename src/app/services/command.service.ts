@@ -2,9 +2,11 @@ import { Injectable, signal } from '@angular/core';
 import { CommandProgress, createInitialProgress } from '../model/command-progress.model';
 import { PaperRange } from '../model/paper-range.model';
 import { HttpClient } from '@angular/common/http';
+import { BoxPlotDatum } from '../components/graph/graph';
 
 @Injectable({ providedIn: 'root' })
 export class CommandService {
+  
 
   public readonly progress = signal<CommandProgress>(createInitialProgress());
 
@@ -35,5 +37,9 @@ export class CommandService {
 
   sendCommand(ranges: PaperRange[]){
     return this.http.post('/bff/command', ranges);
+  }
+
+  getPerformanceHistory() {
+    return this.http.get<BoxPlotDatum[]>('/bff/performance-history');
   }
 }
