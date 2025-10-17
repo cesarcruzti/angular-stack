@@ -81,7 +81,7 @@ export class Graph {
         data
       }
     ];
-    this.cdr.detectChanges();
+    this.cdr.markForCheck();
   }
 
 }
