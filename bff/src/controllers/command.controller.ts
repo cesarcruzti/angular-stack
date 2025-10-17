@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { determineBestPerformanceWithAI, getPerformanceHistory, saveCommands } from '../services/command.service';
+import { getBestPerformingRangeSize, getPerformanceHistory, saveCommands } from '../services/command.service';
 
 async function sendCommandController(req:Request, res:Response) {
   try {
@@ -22,11 +22,10 @@ async function getPerformanceHistoryController(req: Request, res: Response) {
   }
 }
 
-
 async function getBestPerformance(req: Request, res: Response) {
   try {
-    const bestCategory = await determineBestPerformanceWithAI();
-    res.status(200).json(bestCategory);
+    const bestRangeSize = await getBestPerformingRangeSize();
+    res.status(200).json(bestRangeSize);
   } catch (err) {
     res.status(500).json({ error: 'Failed to get performance history' });
   }

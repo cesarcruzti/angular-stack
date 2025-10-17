@@ -67,6 +67,7 @@ export class DashboardComponent {
       }
     });
     this.fetchPerformanceHistory();
+    this.fetchBestPerformance();
   }
 
   fetchPerformanceHistory(){
@@ -101,4 +102,17 @@ export class DashboardComponent {
     const prog = this.commandService.progress();
     return rangesEmpty || prog.pending > 0 || prog.running > 0 || this.isProcessing();
   });
+
+  fetchBestPerformance() {
+    this.commandService.getBestPerformance().subscribe(data => {
+      if(!data || data.commandCount < 1){
+        return;
+      }
+      this.apiService.getTotalPaperRanges().subscribe(total => {
+        if(total > 0){
+          this.rangeSize = Math.floor(total / data.commandCount);
+        }        
+      });      
+    });
+  }
 }

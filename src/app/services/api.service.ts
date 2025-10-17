@@ -1,6 +1,6 @@
 import { Injectable, signal, Signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { catchError, Observable, EMPTY, tap, expand } from 'rxjs';
+import { catchError, Observable, EMPTY, tap, expand, of, map } from 'rxjs';
 import { PaperRangeResponse } from '../model/paper-range-response.model';
 import { PaperRange } from '../model/paper-range.model';
 
@@ -8,6 +8,7 @@ import { PaperRange } from '../model/paper-range.model';
   providedIn: 'root',
 })
 export class ApiService {
+  
   public readonly paperRangesSignal = signal<PaperRange[]>([]);
   
   constructor(private http: HttpClient) {}
@@ -52,5 +53,31 @@ export class ApiService {
     ).subscribe(response => {
       this.paperRangesSignal.update(prev => [...prev, ...response.body.data]);
     });
+  }
+
+  getTotalPaperRanges(): Observable<number> {
+    let params = new HttpParams()
+        .set('rangeSize', '1')
+        .set('pageNumber', '0')
+        .set('pageSize', '1');
+
+    return this.http.get<PaperRangeResponse>(
+        'api/paper/ranges',
+        { params, observe: 'response' }
+    ).pipe(
+        map(response => { 
+          const totalElements = response.headers.get('x-total-elements');
+          
+          if (totalElements === null) {
+            return 0;
+          }
+          
+          return Number(totalElements);
+        }),
+        catchError(error => {
+          console.error('Error fetching paper ranges:', error);
+          return of(0); 
+        })
+    );
   }
 }

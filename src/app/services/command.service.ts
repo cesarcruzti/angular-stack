@@ -3,6 +3,7 @@ import { CommandProgress, createInitialProgress } from '../model/command-progres
 import { PaperRange } from '../model/paper-range.model';
 import { HttpClient } from '@angular/common/http';
 import { BoxPlotDatum } from '../components/graph/graph';
+import { BestPerformance } from '../model/best-performance.model';
 
 @Injectable({ providedIn: 'root' })
 export class CommandService {
@@ -41,5 +42,9 @@ export class CommandService {
 
   getPerformanceHistory() {
     return this.http.get<BoxPlotDatum[]>('/bff/performance-history');
+  }
+
+  getBestPerformance() {
+    return this.http.get<BestPerformance>('/bff/best-performance');
   }
 }
